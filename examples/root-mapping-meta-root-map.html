@@ -1,0 +1,479 @@
+<!--
+  ROOT MAP HTML TEMPLATE v2.0
+  Visual specification updated from v1.0 (AirPods Pro 3 v10 iteration).
+  
+  CHANGES FROM v1.0:
+  - RY spacing: [50, 530, 1020] — more breathing room between root→categories, tighter categories→features
+  - Need cards: solid border (not dashed)
+  - Detail panel: white background
+  - Zoom: much gentler scroll (±2% per tick), buttons ±8%
+  - Default zoom: .24, gentler initial view
+  - Expansion opportunity support: optional purple treatment for suggested/speculative nodes
+  
+  TO USE: Replace the DATA SECTION below (lines marked ===DATA===) with product-specific content.
+  Do NOT modify CSS, layout engine, rendering logic, or detail panel structure.
+  
+  DATA STRUCTURES:
+  
+  Categories array O[] — each category outcome:
+  {
+    id: 'c-xxx',                    // unique id prefixed c-
+    evs: true|false,                // essential value scope
+    diff: 'diff'|'ts'|'bg'|'unc'|'beh',  // competitive position (optional)
+    conf: 'high'|'medium'|'low',    // outcome confidence
+    label: 'Outcome statement',     // the customer benefit — concrete, testable, direct
+    sub: 'Supporting detail',       // clarifying subtitle
+    need: 'Customer problem',       // the pain point this addresses
+    needSev: 3|2|1,                 // need severity: 3=severe, 2=moderate, 1=minor
+    biz: ['Business outcome 1'],    // business outcomes (optional array)
+    sol: [{                         // solutions (optional array)
+      name: 'Solution name',
+      tech: 'Technical requirements',
+      eff: 'strong'|'adequate'|'unproven'
+    }],
+    detail: {                       // click-through detail (optional but recommended)
+      confReason: 'Why this confidence...<sup class="fn" title="Source">1</sup>',
+      sources: ['1. Source description'],
+      belief: 'Team belief statement',
+      competitors: [{n:'Name', d:'Description'}],
+      notes: 'Strategic notes'
+    }
+  }
+  
+  Features array F[] — each feature outcome:
+  {
+    id: 'f-xxx',                    // unique id prefixed f-
+    parent: 'c-xxx',                // parent category id
+    idx: 0,                         // index within parent (0-based, for positioning)
+    ... same fields as categories
+  }
+  
+  EXPANSION OPPORTUNITY NODES (optional — add ONLY when user requests):
+  
+  Expansion nodes use the same schema as regular nodes PLUS:
+  {
+    id: 'e-xxx',                    // unique id prefixed e-
+    isExp: true,                    // marks as expansion opportunity
+    leverage: 'high'|'medium',      // strategic leverage level
+    ... same fields as categories/features
+  }
+  
+  Category-level expansions: add to catOrd and catCh as peer categories
+  Feature-level expansions: add to F[] with parent and idx, positioned rightmost in their zone
+  
+  POSITIONING RULES FOR EXPANSION NODES:
+  - Expansion nodes live at the SAME tier as the thing they're comparable to
+  - A new outcome branch (peer to existing categories) → category tier, rightmost in catOrd near its related branch
+  - A new feature within an existing branch → feature tier, rightmost idx in parent's children
+  - NEVER put expansions in a separate tier — they must be at the correct conceptual altitude
+  
+  Root object — first item in O[]:
+  { id:'root', root:true, ... same fields plus root:true flag }
+  
+  IMPORTANT:
+  - catCh maps category ids to their feature child ids (for zone sizing)
+  - catOrd is the left-to-right order of categories
+  - Root is centered above the most important/widest category
+  - The root's solution should be the product name itself
+  - Attach solutions to categories only when a category-level feature suite exists
+  - Only attach solutions to features when specific implementations exist
+  - Use placeholders: { label:'? Needs articulation', conf:'low', need:'?', needSev:1 }
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Root Map — Root Mapping</title>
+<style>
+/* ============================================================
+   ROOT MAP VISUAL SPEC v2.0 — DO NOT MODIFY
+   Color system, typography, layout, cards, indicators, detail panel
+   ============================================================ */
+:root{--b50:#E6F1FB;--b200:#85B7EB;--b400:#378ADD;--b600:#1660A8;--b800:#0C447C;--a50:#FAEEDA;--a200:#EF9F27;--a600:#7A5B0F;--a800:#573F08;--t50:#E1F5EE;--t200:#5DCAA5;--t600:#0D6650;--t800:#07473A;--r50:#FAECE7;--r200:#F0997B;--r600:#8C3518;--r800:#652710;--g50:#F4F3EF;--g200:#B0AEA6;--g600:#5A5955;--bg:#F9F9F7;--tx:#1E1E1C;--tm:#555552;--tl:#7E7D78;--bd:#DAD8D2;--fn:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;--fnd:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;--hi:#18865F;--mi:#B07E0B;--lo:#B33434;--neu:#8A8983;--cbg:rgba(0,0,0,.02);--cbd:rgba(0,0,0,.065);--arr:#B8B7B2;--arrd:#CDCCC8;--e50:#EEEDFE;--e200:#AFA9EC;--e400:#7F77DD;--e600:#534AB7;--e800:#3C3489}
+@media(prefers-color-scheme:dark){:root{--b50:#0B2F4D;--b200:#1A6AAF;--b400:#3D92E0;--b600:#8FC3F0;--b800:#C5DFF7;--a50:#3F2504;--a200:#C57E1A;--a600:#F0A52A;--a800:#F7CB7D;--t50:#062F28;--t200:#1FA87A;--t600:#62CEAA;--t800:#A4E3CE;--r50:#3E1810;--r200:#C4522C;--r600:#EF9E7E;--r800:#F5C7B6;--g50:#252523;--g200:#58585A;--g600:#B0AEA8;--bg:#161614;--tx:#E4E2DA;--tm:#A8A6A0;--tl:#807E78;--bd:#363634;--cbg:rgba(255,255,255,.025);--cbd:rgba(255,255,255,.07);--arr:#706E68;--arrd:#504F4A;--hi:#2CB882;--mi:#D4940E;--lo:#E85858;--neu:#807E78;--e50:#1E1A40;--e200:#6A62C4;--e400:#8B83E0;--e600:#B3A4ED;--e800:#D5CFFA}}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--tx);font-family:var(--fn);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
+#bar{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd);padding:10px 20px;display:flex;align-items:center;gap:16px}#bar h1{font-family:var(--fnd);font-size:15px;font-weight:600;letter-spacing:-.02em}#bar .sub{color:var(--tl);font-size:11px;margin-top:1px}.sep{width:1px;height:20px;background:var(--bd)}.leg{display:flex;gap:12px;font-size:10px;color:var(--tm);align-items:center;flex-wrap:wrap}.li{display:flex;align-items:center;gap:4px}.zc{margin-left:auto;display:flex;gap:4px}.zc button{width:28px;height:28px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+#cc{position:absolute;top:48px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab}#cc:active{cursor:grabbing}#cv{position:absolute;transform-origin:0 0}
+.ng{position:absolute;background:var(--cbg);border:1px solid var(--cbd);border-radius:12px;padding:6px;cursor:pointer;transition:transform .15s,box-shadow .15s}.ng:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.07);z-index:10}
+.ng.selected{background:#fff;border-color:var(--bd);box-shadow:0 4px 20px rgba(0,0,0,.1);z-index:11}
+@media(prefers-color-scheme:dark){.ng.selected{background:#1E1E1C;border-color:var(--bd)}}
+.ng.is-exp{background:color-mix(in srgb,var(--e50) 40%,transparent);border:2px dashed var(--e400);border-radius:14px}
+.c-need{border-radius:6px;padding:5px 8px;font-size:8px;line-height:1.35;background:var(--r50);border:1px solid var(--r200);color:var(--r800);margin-bottom:4px}.sev{display:flex;align-items:center;gap:2px;margin-bottom:3px;font-size:7px;font-weight:600;color:var(--r600)}.sd{width:4px;height:4px;border-radius:50%;background:var(--r200);opacity:.2;display:inline-block}.sd.on{opacity:1}.s3 .sd.on{background:var(--lo)}.s2 .sd.on{background:var(--mi)}.s1 .sd.on{background:var(--neu)}
+.c-out{border-radius:8px;padding:10px 12px 8px;background:var(--b50);border:2px solid var(--b400);position:relative;margin-bottom:4px}.c-out.is-root{border-width:3px;padding:12px 14px 10px}.c-out.non-evs{border-style:dashed;border-color:var(--b200);opacity:.78}.c-out .ol{font-family:var(--fnd);font-size:12px;font-weight:600;color:var(--b800);line-height:1.25;letter-spacing:-.01em;padding-right:20px}.c-out.is-root .ol{font-size:15px}.c-out .os{font-size:9px;color:var(--b600);margin-top:3px;line-height:1.3}
+.c-out.is-exp{background:var(--e50);border:2px dashed var(--e400)}.c-out.is-exp .ol{color:var(--e800)}.c-out.is-exp .os{color:var(--e600)}
+.evs{font-size:6px;font-weight:700;padding:2px 4px;border-radius:3px;background:var(--b400);color:#fff;margin-left:3px;letter-spacing:.04em;vertical-align:2px}
+.exp-badge{font-size:6px;font-weight:700;padding:2px 4px;border-radius:3px;background:var(--e400);color:#fff;margin-left:3px;letter-spacing:.04em;vertical-align:2px}
+.lev-badge{font-size:7px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:3px}.lev-hi{background:#E1F5EE;color:#0A5C43}.lev-mi{background:#FFF3DB;color:#6B4E00}
+@media(prefers-color-scheme:dark){.lev-hi{background:#0A3B30;color:#72D4AB}.lev-mi{background:#3D2800;color:#D4940E}}
+.dtag{font-size:7px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:3px}.dd{background:#E1F5EE;color:#0A5C43}.dts{background:var(--g50);color:var(--tm)}.dbg{background:#FFF3DB;color:#6B4E00}.du{background:#EDE9FE;color:#4E3D9E}.dbh{background:#FEE9E9;color:#7A1D1D}
+@media(prefers-color-scheme:dark){.dd{background:#0A3B30;color:#72D4AB}.dts{background:var(--g50);color:var(--tm)}.dbg{background:#3D2800;color:#D4940E}.du{background:#2A2060;color:#B3A4ED}.dbh{background:#401515;color:#F09595}.evs{background:var(--b400)}.exp-badge{background:var(--e400)}}
+.cbg{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%}
+.c-biz{border-radius:5px;padding:4px 8px;font-size:8px;line-height:1.3;background:var(--a50);border:1px solid var(--a200);color:var(--a800);margin-bottom:2px}.c-sol{border-radius:5px;padding:4px 8px;font-size:8px;line-height:1.3;background:var(--t50);border:1px solid var(--t200);color:var(--t800);margin-bottom:2px;position:relative}.c-sol .sn{font-weight:600;font-size:9px}.c-sol .st{font-size:7px;opacity:.55;margin-top:1px}.eff{position:absolute;top:4px;right:5px;width:6px;height:6px;border-radius:50%}
+#dp{position:fixed;right:-420px;top:48px;bottom:0;width:400px;background:#fff;border-left:1px solid var(--bd);z-index:200;transition:right .3s cubic-bezier(.4,0,.2,1);overflow-y:auto}#dp.open{right:0}.dp-i{padding:32px 28px 48px}.xb{position:sticky;top:0;float:right;margin:12px 12px 0 0;width:28px;height:28px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tm);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10}
+.dp-tag{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--tl);margin-bottom:10px}.dp-tag.is-exp{color:var(--e600)}.dp-h{font-family:var(--fnd);font-size:22px;font-weight:600;letter-spacing:-.025em;line-height:1.2;color:var(--b800);margin-bottom:6px}.dp-h.is-exp{color:var(--e800)}.dp-sub{font-size:13px;color:var(--tm);line-height:1.45;margin-bottom:20px}
+.ind-strip{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:24px}.ind-label{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tl);margin-bottom:4px}.ind-val{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}.ind-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.ds{margin-bottom:24px}.ds-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tl);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--bd)}.ds p{font-size:13px;line-height:1.6;color:var(--tx)}.ds .mu{color:var(--tm);font-size:12px;line-height:1.55}
+sup.fn{font-size:9px;color:var(--b600);cursor:help;font-weight:600;vertical-align:super;margin-left:1px;border-bottom:1px dotted var(--b200)}
+.comp-table{width:100%;border-collapse:collapse;font-size:12px}.comp-table td{padding:8px 0;border-bottom:1px solid var(--bd);vertical-align:top}.comp-table tr:last-child td{border-bottom:none}.comp-table .cn{font-weight:600;width:100px;color:var(--tx);padding-right:12px}.comp-table .cd{color:var(--tm)}
+.dsol{padding:12px 0;border-bottom:1px solid var(--bd)}.dsol:last-child{border-bottom:none}.dsol-name{font-size:13px;font-weight:600;color:var(--t800);margin-bottom:4px}.dsol-eff{font-size:12px;display:flex;align-items:center;gap:6px;margin-bottom:4px}.dsol-tech{font-size:11px;color:var(--tm);line-height:1.45;padding-left:14px;border-left:2px solid var(--t200)}
+.src-box{background:var(--g50);border-radius:8px;padding:14px 16px;margin-top:24px}.src-box .ds-label{border-bottom:none;padding-bottom:0;margin-bottom:6px}.src-item{font-size:11px;color:var(--tm);line-height:1.5;padding:3px 0 3px 20px;position:relative}.src-item::before{content:attr(data-n);position:absolute;left:0;font-size:9px;font-weight:600;color:var(--b600)}
+.note-box{background:var(--a50);border-left:3px solid var(--a200);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:20px;font-size:12px;line-height:1.55;color:var(--a800)}
+.exp-note-box{background:var(--e50);border-left:3px solid var(--e400);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:20px;font-size:12px;line-height:1.55;color:var(--e800)}
+.user-notes{margin-top:28px;border-top:1px solid var(--bd);padding-top:20px}.user-notes textarea{width:100%;min-height:80px;border:1px solid var(--bd);border-radius:8px;padding:10px 12px;font-family:var(--fn);font-size:12px;color:var(--tx);background:var(--bg);resize:vertical;line-height:1.5}.user-notes textarea:focus{outline:none;border-color:var(--b400)}.user-notes textarea::placeholder{color:var(--tl)}.user-notes .sh{font-size:10px;color:var(--tl);margin-top:4px}
+svg.arrows{position:absolute;top:0;left:0;pointer-events:none}
+</style>
+</head>
+<body>
+<!-- TOOLBAR — replace Root Mapping -->
+<div id="bar"><div><h1>Root Mapping — Root Map</h1><div class="sub">Inferred decision logic + expansion opportunities</div></div><div class="sep"></div><div class="leg"><div class="li"><svg width="9" height="9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="var(--r200)" stroke-width="1"/></svg>Need</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--b50)" stroke="var(--b400)" stroke-width="1.5"/></svg>Outcome</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--a50)" stroke="var(--a200)" stroke-width="1"/></svg>Business</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--t50)" stroke="var(--t200)" stroke-width="1"/></svg>Solution</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--e50)" stroke="var(--e400)" stroke-width="1" stroke-dasharray="2 1"/></svg>Opportunity</div><div class="sep" style="height:14px"></div><div class="li"><svg width="7" height="7"><circle cx="3.5" cy="3.5" r="3" fill="var(--hi)"/></svg>High</div><div class="li"><svg width="7" height="7"><circle cx="3.5" cy="3.5" r="3" fill="var(--mi)"/></svg>Med</div><div class="li"><svg width="7" height="7"><circle cx="3.5" cy="3.5" r="3" fill="var(--lo)"/></svg>Low</div></div><div class="zc"><button onclick="zi()">+</button><button onclick="zo()">−</button><button onclick="rv()">⟲</button></div></div>
+<div id="cc"><div id="cv"></div></div>
+<div id="dp"><button class="xb" onclick="hp()">✕</button><div class="dp-i" id="dc"></div></div>
+<script>
+/* ============================================================
+   LAYOUT ENGINE v2.0 — DO NOT MODIFY
+   Zone-based positioning, rendering, arrows, detail panel
+   ============================================================ */
+const NW=230,NG=35,RY=[50,620,1040];
+const CC={high:'var(--hi)',medium:'var(--mi)',low:'var(--lo)'};
+const LC={high:'var(--hi)',medium:'var(--mi)'};
+const dC={diff:'dd',ts:'dts',bg:'dbg',unc:'du',beh:'dbh'};
+const dL={diff:'differentiated',ts:'table stakes',bg:'battleground',unc:'uncontested',beh:'behind'};
+
+/* ============================================================
+   ===DATA=== REPLACE EVERYTHING BELOW THIS LINE PER PRODUCT
+   ============================================================ */
+
+const catCh = {
+  'c-clarity': ['f-root-out', 'f-language'],
+  'c-align': ['f-visible', 'f-iterate'],
+  'c-scope': ['f-evs-test', 'f-defer'],
+  'c-gaps': ['f-missing', 'f-compete'],
+  'c-pitch': ['f-narrative'],
+  'e-career': ['e-role'],
+};
+
+// Category display order: EVS by shipping sequence (foundational → dependent), then non-EVS, then expansion
+const catOrd = ['c-clarity', 'c-align', 'c-scope', 'c-gaps', 'c-pitch', 'e-career'];
+
+const O = [
+  // ROOT
+  {id:'root', root:true, evs:true, conf:'high',
+    label:'Own the logic behind what I build — and prove it',
+    sub:'Strategic clarity that\'s visible, debatable, and actionable — not trapped in anyone\'s head',
+    need:'Product decisions feel political, arbitrary, or invisible — even to the people making them',
+    needSev:3,
+    biz:['Strategic influence — become the person who clarifies what matters','Faster alignment — stop re-arguing priorities every sprint','Career differentiation — demonstrate strategy thinking, not just execution','Shipping confidence — cut scope without anxiety because the logic is visible'],
+    sol:[{name:'Root Mapping',tech:'Conversational framework + visual artifact · outcomes hierarchy · competitive context · EVS logic',eff:'strong'}],
+    detail:{confReason:'Product teams consistently struggle to articulate why they\'re building what they\'re building.<sup class="fn" title="Marty Cagan, INSPIRED">1</sup> Most frameworks address discovery or delivery but not the persistent decision logic between them.<sup class="fn" title="Teresa Torres, Continuous Discovery Habits">2</sup> Root Mapping fills this gap with a visual artifact that makes strategy debatable.',
+      sources:['Cagan, Marty: INSPIRED — product teams lack shared strategic context','Torres, Teresa: Continuous Discovery Habits — opportunity space ≠ decision logic','Patton, Jeff: User Story Mapping — delivery-focused, not outcome-focused','Adzic, Gojko: Impact Mapping — delivery planning, not strategic visualization'],
+      belief:'If the decision logic behind a product is visible, the team makes better decisions faster — and the person who makes it visible gains outsized influence.',
+      competitors:[{n:'JTBD (Christensen)',d:'Excellent for discovery. No visual hierarchy, no EVS, no competitive context, no living artifact.'},{n:'Opportunity Solution Trees',d:'Closest. But opportunities ≠ outcomes, no biz outcomes, no competitive position, no EVS concept.'},{n:'Lean Canvas',d:'Business-model scoped. Not product decision logic. Static one-pager.'},{n:'OKRs',d:'Measurement-focused. Key Results ≠ outcome hierarchy. No "why" chain.'},{n:'Story Mapping',d:'Delivery sequence. Features, not outcomes. No strategic layer.'},{n:'Wardley Mapping',d:'Value chain positioning. Doesn\'t capture customer outcomes or team beliefs.'}],
+      notes:'Root Mapping is differentiated by combining: outcome hierarchy + needs + business outcomes + competitive context + EVS + confidence indicators + visual artifact — in a single living document. No other framework does all of these together.'}},
+
+  // CATEGORIES
+  {id:'c-clarity', evs:true, diff:'diff', conf:'high',
+    label:'Articulate exactly what must be true for users',
+    sub:'Define outcomes — the thing that will be true in their lives if the product succeeds',
+    need:'Teams say "we\'re building X" but can\'t say what changes in customers\' lives — features masquerade as strategy',
+    needSev:3,
+    sol:[{name:'Outcome laddering conversation',tech:'Structured questioning: moving UP (so that they can ___) and DOWN (what must be true first?)',eff:'strong'}],
+    detail:{confReason:'This is the core value proposition of Root Mapping and the origin of the framework.<sup class="fn" title="Lewis, Peter: Value Mapping (2020)">1</sup> The outcome language discipline ("the thing that will be true for them") is the most distinctive and immediately useful concept.',
+      sources:['Lewis, Peter: Value Mapping — Medium, 2020','Lewis, Peter: IxDA talk on Outcome Laddering'],
+      belief:'If you can\'t state what will be true for customers, you don\'t have a strategy — you have a feature list.',
+      competitors:[{n:'JTBD',d:'Jobs are close to outcomes but framed as tasks, not states of being. "Help me ___" vs "Now they can ___"'},{n:'OKRs',d:'Key Results are metrics, not customer realities. "Increase retention by 10%" ≠ "They trust us with their data"'},{n:'Lean Canvas',d:'Value proposition box exists but stays vague — no hierarchy or enabling logic'}],
+      notes:'The "Nobody Cares About Your Product" framing is the hook — provocative enough to break through, true enough to stick.'}},
+
+  {id:'c-align', evs:true, diff:'diff', conf:'high',
+    label:'Get the whole team arguing from the same map',
+    sub:'A shared, visual decision structure that everyone can point at, challenge, and update',
+    need:'PM, design, eng, and leadership each have a different mental model of what matters — misalignment surfaces as feature debates',
+    needSev:3,
+    sol:[{name:'Visual root map artifact',tech:'Interactive HTML map · zoomable · clickable detail panels · editable notes · shareable file',eff:'strong'}],
+    detail:{confReason:'Alignment is the #1 challenge cited by product leaders.<sup class="fn" title="Product Board State of Product 2024">1</sup> Existing alignment tools (strategy docs, OKR decks) are static and quickly become stale. A living visual artifact that can be iterated in conversation is a step-change.',
+      sources:['Product Board: State of Product Management report, 2024','Cagan, Marty: EMPOWERED — aligned autonomy requires shared context'],
+      belief:'A map everyone can see and challenge is more powerful than a strategy deck that lives in someone\'s Google Drive.',
+      competitors:[{n:'Miro/FigJam boards',d:'General-purpose canvas. No structure, no outcome hierarchy, no indicators.'},{n:'Strategy docs',d:'Static. Quickly stale. No visual hierarchy. Hard to challenge specific assumptions.'},{n:'OKR tools (Lattice, etc.)',d:'Track metrics, don\'t visualize decision logic.'}],
+      notes:'The iteration loop (conversation → map → review → conversation) is the real differentiator vs static frameworks.'}},
+
+  {id:'c-scope', evs:true, diff:'diff', conf:'high',
+    label:'Cut scope without losing the plot',
+    sub:'Know what\'s essential vs. nice-to-have — with logic, not gut feel',
+    need:'"MVP" conversations are gut-feel — no shared criteria for what\'s essential vs deferrable',
+    needSev:3,
+    sol:[{name:'Essential Value Scope (EVS)',tech:'Binary test: remove outcome → does root still work? Solid vs dashed visual treatment',eff:'strong'}],
+    detail:{confReason:'The EVS concept is unique to Root Mapping<sup class="fn" title="Lewis, Peter: Value Mapping">1</sup> and directly addresses the most painful moment in product development: cutting scope. Most frameworks leave this as an exercise for the reader.',
+      sources:['Lewis, Peter: Value Mapping — the EVS concept','MoSCoW prioritization: widely used but lacks outcome logic'],
+      belief:'If you can point at the map and say "remove this — does the root still work?" you have a more honest scope conversation than any prioritization matrix.',
+      competitors:[{n:'MoSCoW',d:'Must/Should/Could/Won\'t — but based on what? No outcome logic underneath.'},{n:'RICE scoring',d:'Quantitative facade over subjective inputs. Doesn\'t connect to outcome hierarchy.'},{n:'Kano model',d:'Categories (must-be, one-dimensional, attractive) but no visual structure or enabling logic.'}],
+      notes:'EVS is the concept that gets the biggest "aha" reaction in workshops. It\'s concrete, visual, and immediately actionable.'}},
+
+  {id:'c-gaps', evs:true, diff:'bg', conf:'high',
+    label:'Spot strategic gaps before they become failures',
+    sub:'Missing outcomes, unaddressed needs, and competitor blind spots — surfaced as visible placeholders',
+    need:'Critical gaps only surface after launch — missing needs, unaddressed competitor moves, assumed-but-unvalidated beliefs',
+    needSev:2,
+    sol:[{name:'Placeholder nodes + competitive tags',tech:'Low-confidence nodes with "?" labels · differentiated/table-stakes/battleground/behind tags per outcome',eff:'adequate'}],
+    detail:{confReason:'Gap detection through explicit placeholders and competitive tagging is a strong differentiator. Marked adequate because the competitive intelligence still requires manual input — no automated competitor monitoring yet.',
+      sources:['Competitive intelligence: manual process in current version','Porter, Michael: Competitive Strategy — positioning framework'],
+      belief:'A map with visible gaps is more useful than a complete-looking map that hides assumptions. Placeholders are features, not bugs.',
+      competitors:[{n:'Opportunity Solution Trees',d:'Surface opportunities but don\'t tag competitive position or flag missing ingredients'},{n:'Wardley Mapping',d:'Strong on competitive positioning but doesn\'t connect to customer outcomes or team beliefs'},{n:'SWOT',d:'Identifies gaps but static, no hierarchy, no connection to specific product decisions'}],
+      notes:'Battleground because OSTs and Wardley both address parts of this. Root Mapping\'s edge is combining gap detection WITH outcome hierarchy AND competitive context.'}},
+
+  {id:'c-pitch', evs:false, diff:'unc', conf:'medium',
+    label:'Tell a product story that moves stakeholders',
+    sub:'Walk anyone through the decision logic — from root outcome to specific feature — in 5 minutes',
+    need:'Great strategy dies in bad decks — stakeholders need narrative, not feature lists, but most frameworks aren\'t presentation-ready',
+    needSev:2,
+    sol:[{name:'Levels of zoom narrative',tech:'Root → category → feature walkthrough using the visual map as the presentation itself',eff:'adequate'}],
+    detail:{confReason:'The map naturally tells a story (zoom in = more detail, zoom out = big picture) but the "presentation mode" experience isn\'t built yet. Currently adequate — you screenshot or screen-share the HTML.',
+      sources:['Lewis, Peter: IxDA talk — demonstrated the levels-of-zoom walkthrough live'],
+      belief:'The map IS the deck. If you need a separate strategy presentation, the map isn\'t working hard enough.',
+      competitors:[{n:'Most frameworks',d:'None of the competing frameworks produce a visual artifact designed for stakeholder walkthroughs'}],
+      notes:'Non-EVS but high-value. A dedicated presentation/walkthrough mode for the HTML artifact would be a strong enhancement.'}},
+
+  // EXPANSION
+  {id:'e-career', isExp:true, leverage:'high',
+    label:'Map your own strategic value — not just your product\'s',
+    sub:'Apply Root Mapping to yourself: define your role as outcomes you ensure, not tasks you perform',
+    need:'Hard to articulate what you uniquely contribute — especially during reviews, job searches, or role transitions',
+    needSev:2,
+    detail:{confReason:'Career strategy is an underserved application of outcome thinking. "Define your role as outcomes" resonates strongly with senior ICs and product leaders who struggle to articulate their value beyond task lists.',
+      sources:['Lewis, Peter: IxDA talk Q&A — discussed applying framework to role definition','Career coaching literature: outcome-based personal branding is emerging but lacks structured tools'],
+      belief:'If you can map the outcomes you produce — for your team, your company, your users — you can articulate your value in any context. The same framework that clarifies a product clarifies a career.',
+      competitors:[{n:'Personal branding frameworks',d:'Mostly narrative-based. No structured hierarchy or evidence system.'},{n:'OKR-based goal setting',d:'Metric-focused. "Hit targets" ≠ "here\'s the unique value I create."'}],
+      notes:'HIGH LEVERAGE. Opens Root Mapping to individual practitioners, not just product teams. Could be a gateway use case — people try it on themselves first, then bring it to their teams.'}},
+];
+
+const F = [
+  // c-clarity features
+  {id:'f-root-out', parent:'c-clarity', idx:0, evs:true, conf:'high',
+    label:'State the product\'s reason to exist in one sentence',
+    sub:'The root outcome — the irreducible promise to customers',
+    need:'Ask 5 team members what the product does and get 5 different answers',
+    needSev:3,
+    sol:[{name:'Root outcome articulation',tech:'Laddering UP: "So that they can ___?" until you reach the broadest true statement',eff:'strong'}],
+    detail:{confReason:'The root outcome exercise consistently produces the biggest "aha" moment in facilitated sessions.',
+      sources:['Lewis, Peter: Value Mapping — root outcome methodology'],
+      notes:'The test: can a new hire read the root outcome and understand what the product is for?'}},
+
+  {id:'f-language', parent:'c-clarity', idx:1, evs:true, conf:'high',
+    label:'Write outcomes people remember and can test',
+    sub:'Concrete, testable, direct — "Control what I hear" not "Enhanced audio management"',
+    need:'Strategy language is vague and corporate — nobody remembers it, nobody can test it',
+    needSev:2,
+    sol:[{name:'Outcome language discipline',tech:'Rules: concrete & testable, framed as customer benefit, confident & direct, memorable',eff:'strong'}],
+    detail:{confReason:'The language discipline is one of Root Mapping\'s most practical contributions. "The thing that will be true for them" is a forcing function for clarity.',
+      sources:['Lewis, Peter: Value Mapping — outcome writing guidelines'],
+      competitors:[{n:'User stories',d:'"As a ___ I want ___ so that ___" — decent structure but verb-focused (doing) not state-focused (being true)'},{n:'Job stories',d:'"When ___ I want to ___ so I can ___" — closer but still task-framed'}],
+      notes:'Bad: "Enhanced noise management capabilities." Good: "Control what I hear." The gap between these is the entire framework.'}},
+
+  // c-align features
+  {id:'f-visible', parent:'c-align', idx:0, evs:true, conf:'high',
+    label:'Make invisible assumptions visible and debatable',
+    sub:'Confidence levels, team beliefs, and evidence — on every node',
+    need:'Assumptions hide inside people\'s heads — unchallenged until they cause a failure',
+    needSev:3,
+    sol:[{name:'Confidence indicators + belief statements + metadata',tech:'3 indicator types (outcome confidence, need severity, solution effectiveness) · detail panel with rationale, sources, and team beliefs',eff:'strong'}],
+    detail:{confReason:'The metadata layer is what makes Root Mapping a living document rather than a static diagram. Marking confidence = making assumptions explicit = enabling productive disagreement.',
+      sources:['Lewis, Peter: Value Mapping — metadata as "why I currently believe this to be true"'],
+      belief:'A medium-confidence node with a clear rationale is more useful than a high-confidence node with no explanation.',
+      notes:'This is where Root Mapping diverges most from other frameworks. Nobody else attaches confidence + evidence + beliefs to individual nodes in a visual hierarchy.'}},
+
+  {id:'f-iterate', parent:'c-align', idx:1, evs:true, conf:'high',
+    label:'Evolve the strategy without starting over',
+    sub:'Update beliefs, add evidence, change confidence — the map grows with the team\'s understanding',
+    need:'Strategy documents go stale within weeks — teams either ignore them or start from scratch',
+    needSev:2,
+    sol:[{name:'Conversation → map iteration loop',tech:'Claude-facilitated updates · regenerated HTML per conversation · session notes persist · team feedback integration',eff:'adequate'}],
+    detail:{confReason:'The iteration model works well in the Claude skill context. Marked adequate because the persistence story (versions, history, team collaboration) is still being developed.',
+      sources:['Lewis, Peter: Root Mapping skill — conversation as iteration engine'],
+      competitors:[{n:'Notion/Confluence strategy docs',d:'Editable but no structured framework. Anyone can edit anything — no disciplined update process.'},{n:'Miro boards',d:'Flexible but no rendering engine. Manual layout maintenance.'}],
+      notes:'The "conversation IS the iteration engine" concept is key to the pitch. You don\'t need a special tool — you need a conversation partner who knows the framework.'}},
+
+  // c-scope features
+  {id:'f-evs-test', parent:'c-scope', idx:0, evs:true, conf:'high',
+    label:'Identify the irreducible core that makes the product viable',
+    sub:'The Essential Value Scope — remove one more outcome and the product breaks',
+    need:'Teams can\'t agree on what "minimum viable" means because there\'s no shared test',
+    needSev:3,
+    sol:[{name:'EVS binary test',tech:'Remove outcome → does root still work? Yes = non-EVS. No = EVS. Visual: solid vs dashed borders.',eff:'strong'}],
+    detail:{confReason:'The binary test is the most actionable single concept in the framework. It turns subjective prioritization into a structural question.',
+      sources:['Lewis, Peter: Value Mapping — Essential Value Scope'],
+      competitors:[{n:'MoSCoW',d:'Must/Should/Could/Won\'t — subjective labels, no structural test'},{n:'Kano',d:'Categories are useful but don\'t connect to an outcome hierarchy'}],
+      notes:'The visual treatment (solid vs dashed) makes EVS decisions immediately visible to anyone looking at the map. No explanation needed.'}},
+
+  {id:'f-defer', parent:'c-scope', idx:1, evs:true, conf:'high',
+    label:'Know what to defer without losing sleep',
+    sub:'Non-EVS outcomes have a place on the map — they\'re planned, not forgotten',
+    need:'Cutting features feels like losing — teams mourn deferred work instead of feeling confident about focus',
+    needSev:2,
+    sol:[{name:'Non-EVS visual treatment',tech:'Dashed borders · dashed connecting lines · 78% opacity · still on the map with full metadata',eff:'strong'}],
+    detail:{confReason:'The psychological insight here matters: deferral feels better when the deferred thing is still visible and valued. It\'s "not yet" rather than "not ever."',
+      sources:['Lewis, Peter: Value Mapping — non-EVS treatment'],
+      belief:'Showing non-EVS outcomes on the map with reduced visual weight is more honest and less painful than removing them entirely. The team can see they\'re planned.',
+      notes:'This is an emotional design choice as much as a strategic one. The dashed treatment says: "we see you, we value you, we\'ll get to you."'}},
+
+  // c-gaps features
+  {id:'f-missing', parent:'c-gaps', idx:0, evs:true, conf:'medium',
+    label:'See missing ingredients as explicit placeholders',
+    sub:'Low-confidence nodes with "?" labels — gaps are features, not bugs',
+    need:'Strategy documents look complete even when critical thinking is missing — polish hides gaps',
+    needSev:2,
+    sol:[{name:'Placeholder node system',tech:'Auto-generated low-confidence nodes · "?" prefix · "Needs articulation" notes · visible on map',eff:'adequate'}],
+    detail:{confReason:'Placeholder concept is strong but the auto-generation logic needs refinement. Claude sometimes guesses well, sometimes not.',
+      sources:['Lewis, Peter: Root Mapping skill v4 — placeholder methodology'],
+      notes:'Medium confidence because the quality of auto-generated placeholders varies. The concept is sound; the execution is iterating.'}},
+
+  {id:'f-compete', parent:'c-gaps', idx:1, evs:true, conf:'high',
+    label:'Know where you\'re differentiated, behind, or in a dogfight',
+    sub:'Competitive position tagged per outcome — not per product',
+    need:'Competitive analysis happens at the product level ("we\'re better than X") instead of the outcome level ("we\'re behind on this specific value")',
+    needSev:2,
+    sol:[{name:'Competitive position tags',tech:'5 tags: differentiated · table stakes · battleground · uncontested · behind — per outcome node',eff:'strong'}],
+    detail:{confReason:'Per-outcome competitive tagging is a genuine differentiator. Most competitive analysis is product-level or feature-level, not outcome-level.',
+      sources:['Porter, Michael: Competitive Strategy — applied at outcome granularity','Lewis, Peter: Root Mapping — competitive tags methodology'],
+      competitors:[{n:'Wardley Mapping',d:'Strong on evolution/positioning but at the capability level, not the outcome level'},{n:'Battlecards',d:'Sales-focused. Feature comparison, not outcome comparison.'}],
+      notes:'The insight: you might be differentiated on one outcome and behind on another within the same product. Product-level competitive analysis misses this.'}},
+
+  // c-pitch features
+  {id:'f-narrative', parent:'c-pitch', idx:0, evs:false, conf:'medium',
+    label:'Walk anyone through the decision logic in 5 minutes',
+    sub:'Zoom in for detail, zoom out for the big picture — the map is the presentation',
+    need:'Strategy presentations take weeks to prepare and are outdated by the time they\'re delivered',
+    needSev:2,
+    sol:[{name:'Levels of zoom walkthrough',tech:'Root (why we exist) → categories (major bets) → features (specific solutions) — using the live map',eff:'adequate'}],
+    detail:{confReason:'Works well in facilitated settings (Lewis demonstrated at IxDA). Not yet optimized for self-serve stakeholder walkthroughs. Needs a presentation mode.',
+      sources:['Lewis, Peter: IxDA talk — live demonstration of levels-of-zoom walkthrough'],
+      notes:'The aspiration: replace strategy decks entirely. The map IS the deck. Current reality: you screen-share the HTML and narrate. A dedicated walkthrough/presentation mode would close this gap.'}},
+
+  // e-career features (expansion)
+  {id:'e-role', parent:'e-career', idx:0, isExp:true, leverage:'high',
+    label:'Define your role as outcomes you ensure',
+    sub:'Not "I manage the backlog" but "The team ships the right things because I make decision logic visible"',
+    need:'Job descriptions list tasks and responsibilities — they don\'t capture the unique value someone creates',
+    needSev:2,
+    detail:{confReason:'This application emerged from Q&A sessions and resonates strongly with senior practitioners who feel undervalued because their impact is structural, not visible.',
+      sources:['Lewis, Peter: IxDA Q&A — audience asked about applying to personal career strategy','Career coaching: outcome-based role definition is emerging practice'],
+      belief:'The same question that clarifies a product ("what will be true if this succeeds?") clarifies a career ("what will be true if I\'m great at this role?").',
+      notes:'Gateway use case: someone maps their own role → realizes the framework is powerful → brings it to their product team. Viral adoption path.'}},
+];
+
+/* ============================================================
+   ===END DATA=== DO NOT MODIFY BELOW THIS LINE
+   ============================================================ */
+
+// Zone computation
+const zones={};let xC=40;
+catOrd.forEach(c=>{const n=catCh[c].length;const zw=Math.max(NW+12,n*(NW+NG)-NG+12);zones[c]={x:xC,w:zw,cx:xC+zw/2,ch:catCh[c]};xC+=zw+NG+15;});
+const TW=xC+40;
+const userNotes={};
+
+// Position root centered above ALL categories
+const firstZ=zones[catOrd[0]], lastZ=zones[catOrd[catOrd.length-1]];
+const allCatMidX=(firstZ.x+lastZ.x+lastZ.w)/2;
+if(!O[0].x){O[0].x=allCatMidX-140;O[0].y=RY[0];O[0].w=280;}
+
+// Position categories
+O.forEach(o=>{if(o.root)return;if(!o.x&&zones[o.id]){o.x=zones[o.id].cx-NW/2;o.y=RY[1];o.w=NW;}});
+
+// Position features within zones
+F.forEach(f=>{const z=zones[f.parent];if(!z)return;const n=z.ch.length;const tw=n*NW+(n-1)*NG;const sx=z.x+(z.w-tw)/2;f.x=sx+f.idx*(NW+NG);f.y=RY[2];f.w=NW;});
+
+const allN=[...O,...F];
+const edges=[];catOrd.forEach(c=>{edges.push([c,'root']);catCh[c].forEach(f=>edges.push([f,c]));});
+const evsMap={};allN.forEach(n=>{evsMap[n.id]=n.evs});
+
+// Compute bounding box for fit-to-viewport
+let bbL=Infinity,bbT=Infinity,bbR=-Infinity,bbB=-Infinity;
+allN.forEach(n=>{bbL=Math.min(bbL,n.x);bbT=Math.min(bbT,n.y);bbR=Math.max(bbR,n.x+(n.w||NW));bbB=Math.max(bbB,n.y+400);});// 400 = generous node height estimate
+const mapW=bbR-bbL,mapH=bbB-bbT;
+
+// Canvas + SVG
+const cv=document.getElementById('cv');cv.style.width=TW+'px';cv.style.height=(RY[2]+900)+'px';
+const cvH=RY[2]+900;
+const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','arrows');svg.setAttribute('width',TW);svg.setAttribute('height',cvH);
+svg.innerHTML='<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1.5L8 5L2 8.5" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+cv.appendChild(svg);
+
+// Unified render for all nodes
+const nodeEls={};
+function sevH(n){n=n||2;const c=n>=3?'s3':n>=2?'s2':'s1';const l=n>=3?'severe':n>=2?'moderate':'minor';let d='';for(let i=1;i<=3;i++)d+='<span class="sd'+(i<=n?' on':'')+'"></span>';return'<div class="sev '+c+'">'+d+' '+l+'</div>';}
+
+function renderNode(o){
+const g=document.createElement('div');
+const isE=o.isExp;
+g.className='ng'+(isE?' is-exp':'');
+g.style.left=o.x+'px';g.style.top=o.y+'px';g.style.width=(o.w||NW)+'px';
+let h='';
+if(o.need)h+='<div class="c-need">'+sevH(o.needSev)+o.need+'</div>';
+if(isE){
+  const levClass=o.leverage==='high'?'lev-hi':'lev-mi';
+  const levLabel=o.leverage==='high'?'high leverage':'medium leverage';
+  h+='<div class="c-out is-exp'+(o.root?' is-root':'')+'">';
+  if(o.leverage)h+='<div class="cbg" style="background:'+LC[o.leverage]+'" title="'+o.leverage+' leverage"></div>';
+  h+='<div class="ol">'+o.label+'<span class="exp-badge">OPPORTUNITY</span></div>';
+  if(o.sub)h+='<div class="os">'+o.sub+'</div>';
+  h+='<div class="lev-badge '+levClass+'">'+levLabel+'</div></div>';
+} else {
+  const et=o.evs?'<span class="evs">EVS</span>':'';
+  const dt=o.diff?'<div class="dtag '+dC[o.diff]+'">'+dL[o.diff]+'</div>':'';
+  h+='<div class="c-out'+(o.root?' is-root':'')+(o.evs===false?' non-evs':'')+'">';
+  if(o.conf)h+='<div class="cbg" style="background:'+CC[o.conf]+'" title="'+o.conf+' confidence"></div>';
+  h+='<div class="ol">'+o.label+et+'</div>';
+  if(o.sub)h+='<div class="os">'+o.sub+'</div>';h+=dt+'</div>';
+}
+if(o.biz)o.biz.forEach(b=>{h+='<div class="c-biz">'+b+'</div>';});
+if(o.sol)o.sol.forEach(s=>{h+='<div class="c-sol">';if(s.eff)h+='<div class="eff" style="background:'+(s.eff==='strong'?'var(--hi)':s.eff==='adequate'?'var(--mi)':'var(--neu)')+'" title="'+s.eff+'"></div>';h+='<div style="padding-right:14px"><div class="sn">'+s.name+'</div><div class="st">'+s.tech+'</div></div></div>';});
+g.innerHTML=h;g.onclick=e=>{e.stopPropagation();sp(o)};cv.appendChild(g);nodeEls[o.id]={el:g,data:o};
+}
+allN.forEach(renderNode);
+
+// Arrows
+function anc(id){const i=nodeEls[id];if(!i)return null;const e=i.el;const x=parseFloat(e.style.left),y=parseFloat(e.style.top);return{cx:x+e.offsetWidth/2,top:y,bot:y+e.offsetHeight};}
+function drawE(){svg.querySelectorAll('.edge').forEach(e=>e.remove());edges.forEach(([f,t])=>{const a=anc(f),b=anc(t);if(!a||!b)return;const src=nodeEls[f]?.data;const isE=src?.isExp;const ne=!isE&&evsMap[f]===false;const x1=a.cx,y1=a.top-1,x2=b.cx,y2=b.bot+1;const p=document.createElementNS('http://www.w3.org/2000/svg','path');const my=(y1+y2)/2;p.setAttribute('d','M'+x1+','+y1+' C'+x1+','+my+' '+x2+','+my+' '+x2+','+y2);p.setAttribute('fill','none');p.setAttribute('class','edge');
+if(isE){p.setAttribute('stroke','var(--e400)');p.setAttribute('stroke-width','2');p.setAttribute('stroke-dasharray','10 6');}
+else{p.setAttribute('stroke',ne?'var(--arrd)':'var(--arr)');p.setAttribute('stroke-width',ne?'1.2':'1.8');if(ne)p.setAttribute('stroke-dasharray','8 5');}
+p.setAttribute('marker-end','url(#a)');svg.appendChild(p);});}
+setTimeout(drawE,500);
+window.addEventListener('resize',()=>setTimeout(drawE,100));
+
+// Detail panel
+let selectedEl=null;
+function sp(o){const d=o.detail||{};const p=document.getElementById('dp'),c=document.getElementById('dc');const isE=o.isExp;const conf=o.conf||'medium';const sn=o.needSev||2;const sevLbl=sn>=3?'Severe':sn>=2?'Moderate':'Minor';const sevSub=sn>=3?'Strong motivation to solve':sn>=2?'Real problem, workarounds exist':'Mild inconvenience';
+if(selectedEl)selectedEl.classList.remove('selected');const ne=nodeEls[o.id];if(ne){ne.el.classList.add('selected');selectedEl=ne.el;}
+let compH='';if(d.competitors?.length){compH='<div class="ds"><div class="ds-label">Competitive landscape</div><table class="comp-table">'+d.competitors.map(c=>'<tr><td class="cn">'+c.n+'</td><td class="cd">'+c.d+'</td></tr>').join('')+'</table></div>';}
+let solH='';if(o.sol?.length){solH='<div class="ds"><div class="ds-label">Solutions &amp; effectiveness</div>'+o.sol.map(s=>{const ec=s.eff||'unproven';const ecolor=ec==='strong'?'var(--hi)':ec==='adequate'?'var(--mi)':'var(--neu)';const elbl=ec==='strong'?'Strong — effectively produces outcome':ec==='adequate'?'Adequate — functional, room to improve':'Unproven — not yet validated';return'<div class="dsol"><div class="dsol-name">'+s.name+'</div><div class="dsol-eff"><span class="ind-dot" style="background:'+ecolor+'"></span><span>'+elbl+'</span></div><div class="dsol-tech">'+s.tech+'</div></div>';}).join('')+'</div>';}
+let bizH='';if(o.biz?.length){bizH='<div class="ds"><div class="ds-label">Business outcomes</div>'+o.biz.map(b=>'<p style="margin-bottom:6px">'+b+'</p>').join('')+'</div>';}
+let srcH='';if(d.sources?.length){srcH='<div class="src-box"><div class="ds-label">Sources</div>'+d.sources.map((s,i)=>'<div class="src-item" data-n="'+(i+1)+'.">'+s+'</div>').join('')+'</div>';}
+const en=userNotes[o.id]||'';const tagClass=isE?' is-exp':'';const hClass=isE?' is-exp':'';
+const tagText=isE?'Expansion opportunity'+(o.leverage?' · '+o.leverage+' leverage':''):'Experience outcome'+(o.evs?' · EVS':'')+(o.diff?' · '+dL[o.diff]:'');
+const indLabel1=isE?'Strategic leverage':'Outcome confidence';const indVal1=isE?o.leverage:conf;const indColor1=isE?LC[o.leverage]:CC[conf];
+c.innerHTML='<div class="dp-tag'+tagClass+'">'+tagText+'</div><div class="dp-h'+hClass+'">'+o.label+'</div>'+(o.sub?'<div class="dp-sub">'+o.sub+'</div>':'')+'<div class="ind-strip"><div><div class="ind-label">'+indLabel1+'</div><div class="ind-val"><span class="ind-dot" style="background:'+indColor1+'"></span>'+indVal1+'</div></div><div><div class="ind-label">Need severity</div><div class="ind-val"><span class="ind-dot" style="background:'+(sn>=3?'var(--lo)':sn>=2?'var(--mi)':'var(--neu)')+'"></span>'+sevLbl+'</div></div></div>'+(d.confReason?'<div class="ds"><div class="ds-label">'+(isE?'Evidence & rationale':'Why this confidence level?')+'</div><p class="mu">'+d.confReason+'</p></div>':'')+(o.need?'<div class="ds"><div class="ds-label">Problem addressed</div><p>'+o.need+'</p><p class="mu" style="margin-top:6px">'+sevLbl+' — '+sevSub+'</p></div>':'')+(d.belief?'<div class="ds"><div class="ds-label">'+(isE?'Strategic thesis':'Team belief')+'</div><p>'+d.belief+'</p></div>':'')+compH+bizH+solH+srcH+(d.notes?'<div class="'+(isE?'exp-note-box':'note-box')+'">'+d.notes+'</div>':'')+'<div class="user-notes"><div class="ds-label">Your notes &amp; evidence</div><textarea id="un-'+o.id+'" placeholder="'+(isE?'Strategic assessment, risks, dependencies, evidence for or against...':'Add context, links to research, questions for the team, or evidence that supports or challenges this belief...')+'">'+en+'</textarea><div class="sh">Saved for this session · paste links, data, or questions</div></div>';
+const ta=c.querySelector('textarea');if(ta)ta.addEventListener('input',function(){userNotes[o.id]=this.value;});
+p.classList.add('open');}
+function hp(){if(selectedEl){selectedEl.classList.remove('selected');selectedEl=null;}document.getElementById('dp').classList.remove('open')}
+
+// Pan + zoom — fit to viewport on load
+const cont=document.getElementById('cc');
+const PAD=60;// padding around content
+function fitView(){
+  const vw=cont.clientWidth,vh=cont.clientHeight;
+  const sx=(vw-PAD*2)/mapW,sy=(vh-PAD*2)/mapH;
+  s=Math.min(sx,sy,1.5);// don't zoom in past 1.5x
+  px=(vw-mapW*s)/2-bbL*s;
+  py=(vh-mapH*s)/2-bbT*s;
+}
+let s,px,py;fitView();
+function ap(){cv.style.transform='translate('+px+'px,'+py+'px) scale('+s+')'}ap();
+let dr=false,sx,sy;
+cont.addEventListener('mousedown',e=>{if(e.target.closest('.ng'))return;dr=true;sx=e.clientX-px;sy=e.clientY-py});window.addEventListener('mousemove',e=>{if(!dr)return;px=e.clientX-sx;py=e.clientY-sy;ap()});window.addEventListener('mouseup',()=>dr=false);cont.addEventListener('wheel',e=>{e.preventDefault();const olds=s;s=Math.max(.05,Math.min(2,s*(e.deltaY>0?.98:1.02)));const r=s/olds;const rect=cont.getBoundingClientRect();const cx=e.clientX-rect.left,cy=e.clientY-rect.top;px=cx-r*(cx-px);py=cy-r*(cy-py);ap()},{passive:false});
+function zi(){const olds=s;s=Math.min(2,s*1.08);const r=s/olds;const vw=cont.clientWidth/2,vh=cont.clientHeight/2;px=vw-r*(vw-px);py=vh-r*(vh-py);ap()}
+function zo(){const olds=s;s=Math.max(.05,s*.92);const r=s/olds;const vw=cont.clientWidth/2,vh=cont.clientHeight/2;px=vw-r*(vw-px);py=vh-r*(vh-py);ap()}
+function rv(){fitView();ap()}
+cv.addEventListener('click',e=>{if(!e.target.closest('.ng'))hp()});
+// Re-fit on window resize
+window.addEventListener('resize',()=>{fitView();ap()});
+</script>
+</body>
+</html>
