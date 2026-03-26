@@ -1,6 +1,6 @@
-# Nobody Cares About Your Product
+# Root Mapping
 
-**Root Mapping** is a product strategy framework that makes decision logic visible. Paste a URL, describe your product, or dump your research — and Claude generates an interactive visual map of the outcomes your product must produce, who they serve, and why they matter.
+**Root Mapping** is a product strategy framework that makes decision logic visible as a living source of truth. Paste a URL, describe your product, or dump your research or roadmap — and Claude generates an interactive visual map of the outcomes your product must produce, who they serve, and why they matter.
 
 Works for products, practices, roles, and career clarity.
 
