@@ -1,6 +1,6 @@
 ---
 name: root-mapping
-description: Generate interactive product strategy maps from URLs, research, or feature lists. Maps outcomes, needs, competitive context, and EVS. Works for products, roles, and practices.
+description: Product strategy framework for clarifying what to build and why. Use when helping with product definition, feature prioritization, roadmap alignment, team alignment on strategy, translating insights into product decisions, identifying essential vs. nice-to-have features, diagnosing why a product effort feels unfocused, competitive analysis, value proposition design, jobs to be done mapping, product-market fit analysis, strategic differentiation, or building a compelling product story. Also useful for personal and role maps — mapping a consulting practice, personal brand strategy, role clarity, career focus, or defining responsibilities as outcomes to ensure. Trigger on phrases like "what should we build", "why does this feature exist", "how do we prioritize", "what's our differentiation", "map my practice", or "clarify my role." Based on Peter Lewis's Root Mapping framework (formerly Outcome Laddering).
 license: CC BY 4.0 — Attribution required. Based on Root Mapping by Peter Lewis (https://medium.com/@thispeterlewis/value-mapping-6203c997c463)
 ---
 
@@ -266,7 +266,17 @@ These are errors that have come up repeatedly during Root Map generation. Check 
    - Could it be a **sub-feature** (a control, setting, or implementation detail)? → Too deep for a strategy map — belongs in a design spec, not here
    - When in doubt: start it as a feature. Promote to category only if you discover it needs multiple children.
 
-2. **Outcomes that are really features in disguise.** "AI-powered recommendations" is a solution, not an outcome. "Discover what's relevant without searching" is the outcome. Always ask: if the solution changed completely, what would still need to be true?
+2. **Outcomes that are really solutions in disguise.** This is the single most common error. An outcome must be solution-agnostic — it describes what's true for the customer, not how it happens. Apply this gate to every label:
+
+   > **"If the solution changed completely, would this outcome statement still be true?"**
+   > If no → you've embedded a mechanism. Strip it and state what remains.
+
+   Three patterns to watch for:
+   - **Solution IS the label:** "AI-powered recommendations" → "Discover what's relevant without effort"
+   - **Mechanism smuggled in via preposition:** "Discover content through personalized feed" → "Discover what's relevant without effort" (the "through" phrase is a solution)
+   - **Technology or feature name as shorthand:** "Track progress with real-time dashboard" → "Always know where things stand"
+
+   The test is simple: if engineering came back and said "we found a completely different way to achieve this," would the outcome label still make sense? If the label would need to change because the mechanism changed, it's not an outcome.
 
 3. **Missing or wrong parent references.** Every `F[]` item needs a `parent` field matching a category `id` in `O[]`, and that feature's `id` must appear in the parent's array in `catCh`. If these are out of sync, features will be orphaned or misplaced.
 
@@ -287,7 +297,8 @@ Before saving a Root Map file, review the data section against these checks:
 **Outcome language quality:**
 - Read each `label` field aloud. Is it concrete enough to verify? Could you test whether it's true? If not, rewrite it.
 - Check for corporate-speak: "enhanced," "optimized," "leveraged," "comprehensive" — these are almost always vague. Replace with what the customer actually experiences.
-- Check for solution-as-outcome: if the label describes a technology or feature name rather than what it enables, you've written a solution, not an outcome.
+- **Solution-agnosticism gate (apply to EVERY label):** if the implementation changed completely, would this label still be true? Check for mechanism words: "through," "via," "using," "with," "by" followed by a solution — these are smuggled mechanisms. Strip the mechanism, keep the outcome.
+- Check for technology or feature names embedded in the label — "AI-powered," "real-time," "ML-driven," "dashboard," "feed," "notifications" — these are solutions, not outcomes. State what the customer experiences, not the mechanism.
 
 **Confidence variation:**
 - If every outcome is `conf: 'high'`, you haven't thought hard enough. A map with uniform confidence is a map where nobody questioned anything. Vary confidence honestly — low confidence on a node is more useful than false certainty.
@@ -307,6 +318,7 @@ Outcome statements should be:
 - **Framed as customer benefit** — what THEY can do, not what WE built
 - **Confident and direct** — "Control what I hear" not "Help users manage their audio environment"
 - **Memorable** — someone should be able to recall the key outcomes from memory after seeing the map once
+- **Solution-agnostic** — the statement survives a total change in implementation. "Always know where things stand" not "Track progress with real-time dashboard." If the label contains a HOW, it's a solution.
 
 Bad: "Enhanced noise management capabilities"
 Good: "Control what I hear"

@@ -1,6 +1,6 @@
 <!--
-  ROOT MAP HTML TEMPLATE v4.0
-  Workshop-enabled template with inline editing, change log, and snapshot export.
+  ROOT MAP HTML TEMPLATE v2.0
+  Visual specification updated from v1.0 (AirPods Pro 3 v10 iteration).
   
   CHANGES FROM v1.0:
   - RY spacing: [50, 530, 1020] — more breathing room between root→categories, tighter categories→features
@@ -84,7 +84,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Root Map — PRODUCT_NAME</title>
+<title>Root Map — AirPods Pro 3</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <style>
@@ -209,7 +209,7 @@ svg.arrows{position:absolute;top:0;left:0;pointer-events:none}
 </head>
 <body class="ws-active">
 <!-- TOOLBAR -->
-<div id="bar"><div><h1>PRODUCT_NAME — Root Map</h1><div class="sub">Inferred product decision logic</div></div><div class="sep"></div><div class="leg"><div class="li"><svg width="9" height="9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="var(--r200)" stroke-width="1"/></svg>Need</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--b50)" stroke="var(--b400)" stroke-width="1.5"/></svg>Outcome</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--a50)" stroke="var(--a200)" stroke-width="1"/></svg>Business</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--t50)" stroke="var(--t200)" stroke-width="1"/></svg>Solution</div><div class="sep" style="height:14px"></div><div class="li">★ Key differentiator</div></div><div class="zc"><div class="ws-tools"><button class="ws-btn ws-btn-icon" onclick="wsUndo()" id="ws-undo-btn" style="opacity:.35;pointer-events:none" title="Undo (⌘Z)"><i class="ph-bold ph-arrow-counter-clockwise"></i></button><button class="ws-btn ws-btn-icon" onclick="wsRedo()" id="ws-redo-btn" style="opacity:.35;pointer-events:none" title="Redo (⌘⇧Z)"><i class="ph-bold ph-arrow-clockwise"></i></button><div class="sep" style="height:16px"></div><button class="ws-btn" onclick="wsShowLog()" id="ws-log-btn">Changes<span class="ws-badge" id="ws-badge">0</span></button><button class="ws-btn" onclick="wsSaveSnapshot()">Save snapshot</button><span class="ws-save-ind" id="ws-save-ind"></span></div><div class="sep" style="height:20px"></div><button onclick="zi()">+</button><button onclick="zo()">−</button><button onclick="rv()" title="Fit to screen"><i class="ph-bold ph-corners-out" style="font-size:13px"></i></button></div></div>
+<div id="bar"><div><h1>AirPods Pro 3 — Root Map</h1><div class="sub">Inferred decision logic from apple.com/airpods-pro · September 2025 launch</div></div><div class="sep"></div><div class="leg"><div class="li"><svg width="9" height="9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="var(--r200)" stroke-width="1"/></svg>Need</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--b50)" stroke="var(--b400)" stroke-width="1.5"/></svg>Outcome</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--a50)" stroke="var(--a200)" stroke-width="1"/></svg>Business</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--t50)" stroke="var(--t200)" stroke-width="1"/></svg>Solution</div><div class="sep" style="height:14px"></div><div class="li">★ Key differentiator</div></div><div class="zc"><div class="ws-tools"><button class="ws-btn ws-btn-icon" onclick="wsUndo()" id="ws-undo-btn" style="opacity:.35;pointer-events:none" title="Undo (⌘Z)"><i class="ph-bold ph-arrow-counter-clockwise"></i></button><button class="ws-btn ws-btn-icon" onclick="wsRedo()" id="ws-redo-btn" style="opacity:.35;pointer-events:none" title="Redo (⌘⇧Z)"><i class="ph-bold ph-arrow-clockwise"></i></button><div class="sep" style="height:16px"></div><button class="ws-btn" onclick="wsShowLog()" id="ws-log-btn">Changes<span class="ws-badge" id="ws-badge">0</span></button><button class="ws-btn" onclick="wsSaveSnapshot()">Save snapshot</button><span class="ws-save-ind" id="ws-save-ind"></span></div><div class="sep" style="height:20px"></div><button onclick="zi()">+</button><button onclick="zo()">−</button><button onclick="rv()" title="Fit to screen"><i class="ph-bold ph-corners-out" style="font-size:13px"></i></button></div></div>
 <div id="ws-restore"><span>Edit session found — restore previous edits?</span><button class="ws-r-yes" onclick="wsRestore()">Restore</button><button class="ws-r-no" onclick="wsDismiss()">Start fresh</button></div>
 <div id="ws-log"><div class="wl-head"><h2>Change Log</h2><button class="xb" onclick="wsHideLog()" style="position:static;float:none;margin:0">✕</button></div><div class="wl-notes"><label>Session notes</label><textarea id="ws-session-notes" placeholder="What was discussed, who was present, key decisions..."></textarea></div><div id="ws-log-entries"><div class="wl-empty">No changes yet</div></div></div>
 <div id="ws-modal-bg"><div id="ws-modal"><h3>Save snapshot</h3><div class="ws-m-sub">This downloads a self-contained HTML file with all your edits baked in.</div><textarea id="ws-changelog" placeholder="What did you change and why? (e.g., &quot;Reframed noise control outcome based on team discussion — shifted from feature-led to benefit-led language&quot;)"></textarea><div class="ws-m-btns"><button class="ws-m-cancel" onclick="wsCloseModal()">Cancel</button><button class="ws-m-save" onclick="wsConfirmSave()">Save &amp; download</button></div></div></div>
@@ -219,7 +219,7 @@ svg.arrows{position:absolute;top:0;left:0;pointer-events:none}
 /* Capture clean HTML source before rendering for snapshot export */
 const _SRC='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
 /* ============================================================
-   LAYOUT ENGINE v4.0 — DO NOT MODIFY
+   LAYOUT ENGINE v2.0 — DO NOT MODIFY
    Zone-based positioning, rendering, arrows, detail panel
    ============================================================ */
 const NW=230,NG=35,RY=[50,620,1040];
@@ -233,61 +233,334 @@ const dL={diff:'<i class="ph-fill ph-star"></i> differentiated',ts:'<i class="ph
    ============================================================ */
 
 const catCh = {
-  'c-example': ['f-ex1', 'f-ex2'],
+  'c-noise': ['f-anc', 'f-transparency', 'f-adaptive'],
+  'c-sound': ['f-audio', 'f-spatial', 'f-calls'],
+  'c-wear': ['f-fit', 'f-battery', 'f-durable', 'f-case'],
+  'c-hearing': ['f-test', 'f-aid', 'f-protect'],
+  'c-fitness': ['f-hr', 'f-workout'],
+  'c-smart': ['f-translate', 'f-siri', 'f-ecosystem'],
 };
 
-// Category display order: EVS by shipping sequence (foundational → dependent), then non-EVS, then expansion
-const catOrd = ['c-example'];
+// EVS by foundational → dependent, then non-EVS
+const catOrd = ['c-noise', 'c-sound', 'c-wear', 'c-hearing', 'c-fitness', 'c-smart'];
 
 const O = [
-  // ROOT — always first, always root:true
+  // ROOT
   {id:'root', root:true, evs:true, conf:'high',
-    label:'Root outcome goes here',
-    sub:'The top-level customer outcome — what will be true if this product succeeds?',
-    need:'The core customer problem this product addresses',
+    label:'Control what I hear — and how well I hear',
+    sub:'Total command of my audio world: silence when I need it, clarity when I want it, protection for the long run',
+    need:'I\'m surrounded by noise I didn\'t choose, audio that doesn\'t match the moment, and I\'m slowly losing the hearing I take for granted',
     needSev:3,
-    biz:['Primary business outcome'],
-    sol:[{name:'PRODUCT_NAME', tech:'The product itself is the root-level solution', eff:'strong'}],
-    detail:{confReason:'Why the team believes this is the right root outcome.<sup class="fn" title="Source">1</sup>',
-      sources:['1. Primary source or research'],
-      belief:'The team\'s core conviction about why this matters.',
-      competitors:[{n:'Competitor A',d:'How they address the same space'},{n:'Competitor B',d:'Different approach to the same problem'}],
-      notes:'PLACEHOLDER — replace with actual product root outcome'}},
+    biz:['Market leadership — maintain #1 TWS revenue share globally','Premium ASP — justify $249 price in a commoditizing category','Ecosystem lock-in — deepen Apple device interdependency','Health platform expansion — extend Apple\'s health narrative from wrist to ear','Services attach rate — Fitness+, Apple Music, Apple TV+ subscriptions'],
+    sol:[{name:'AirPods Pro 3',tech:'H2 chip · multiport acoustic architecture · heart rate sensor · foam-infused ear tips · IP57 · MagSafe case · iOS 26 integration',eff:'strong'}],
+    detail:{confReason:'The premium TWS market is mature enough that the core audio outcomes are well-validated by 10+ years of market data.<sup class="fn" title="Counterpoint TWS market data">1</sup> Apple\'s extension into hearing health and fitness creates a new category that competitors haven\'t matched.<sup class="fn" title="Apple Newsroom Sept 2025">2</sup> The root outcome of total audio control is the unifying thread across all branches.',
+      sources:['1. Counterpoint Research: Global TWS market share reports, 2023–2025','2. Apple Newsroom: "Introducing AirPods Pro 3, the ultimate audio experience" (Sept 2025)','3. FDA authorization for AirPods Pro hearing aid functionality (2024)','4. SoundGuys AirPods Pro 3 review (Sept 2025)'],
+      belief:'The next era of earbuds isn\'t about better sound — it\'s about earbuds becoming the primary sensing and audio interface for daily life. Hearing health + fitness + translation signals Apple sees AirPods as a health device that also plays music, not the other way around.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Strong ANC and sound quality. No hearing health, no fitness sensing, no ecosystem integration. Competes on pure audio merit.'},{n:'Bose QC Ultra Earbuds',d:'Excellent ANC. CustomTune personalization. No health features, no fitness. Bose ecosystem is thin.'},{n:'Samsung Galaxy Buds3 Pro',d:'Good ANC, decent health features (planned). Galaxy ecosystem matters for Android. No hearing aid capability.'},{n:'Google Pixel Buds Pro 2',d:'Tensor chip, strong Google Assistant. Weakest ANC of premium tier. No health features.'},{n:'Nothing Ear (3)',d:'Price disruptor. ChatGPT integration. Can\'t compete on ANC, sound, or any health/fitness dimension.'}],
+      notes:'This map is inferred from Apple\'s public marketing page (apple.com/airpods-pro) as of September 2025. Confidence levels reflect how well-evidenced each outcome is from public information — not internal Apple data. Team belief statements are analytical inferences, not Apple\'s stated positions.'}},
 
-  // CATEGORY — one per major outcome branch
-  {id:'c-example', evs:true, diff:'bg', conf:'medium',
-    label:'Category outcome statement',
-    sub:'What must be true within this branch for the root to succeed?',
-    need:'The specific customer problem this branch addresses',
+  // CATEGORIES — EVS
+  {id:'c-noise', evs:true, diff:'bg', conf:'high',
+    label:'Block out the world or let it in',
+    sub:'Complete control over environmental sound — silence, awareness, or an intelligent blend',
+    need:'Unwanted noise follows me everywhere — commute, office, gym, street — and I can\'t concentrate, relax, or hear what matters',
+    needSev:3,
+    biz:['Core purchase driver — ANC is the #1 reason people upgrade from standard earbuds','Retention — daily dependence on noise control creates switching cost'],
+    sol:[{name:'Intelligent noise control system',tech:'H2 chip computational audio · ultra-low-noise microphones · foam-infused ear tips for passive isolation · 48,000x/sec ML processing',eff:'strong'}],
+    detail:{confReason:'ANC is the defining feature of the "Pro" tier across all competitors. Apple claims "world\'s best in-ear ANC" with 2x improvement over Pro 2 and 4x over original Pro.<sup class="fn" title="Apple Newsroom Sept 2025">1</sup> Independent reviews confirm significant ANC improvement.<sup class="fn" title="SoundGuys review">2</sup>',
+      sources:['1. Apple Newsroom: AirPods Pro 3 announcement (Sept 2025)','2. SoundGuys: "Apple AirPods Pro 3 review: Close to perfect" (Sept 2025)','3. MacRumors: "AirPods Pro 3 Are Major Upgrade With These 8 New Features" (Sept 2025)'],
+      belief:'ANC quality is approaching diminishing returns for most consumers. The battleground is shifting from raw noise reduction to intelligent mode switching — knowing when to block and when to pass through without the user thinking about it.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Industry-leading ANC until Pro 3. Very close competition — may still win in some frequency ranges.'},{n:'Bose QC Ultra Earbuds',d:'Historically excellent ANC. Strong passive isolation. Close competitor.'},{n:'Samsung Galaxy Buds3 Pro',d:'Improved ANC with 360 Audio. Not in the same tier as Apple/Sony/Bose.'},{n:'Google Pixel Buds Pro 2',d:'Weakest ANC in premium segment. Silent Seal doesn\'t compete.'}],
+      notes:'The "battleground" tag reflects that Sony and Bose are genuine competitors on raw ANC. Apple\'s edge is the intelligence layer (Adaptive Audio, Conversation Awareness) rather than raw noise reduction alone.'}},
+
+  {id:'c-sound', evs:true, diff:'bg', conf:'high',
+    label:'Hear every note',
+    sub:'Breathtaking audio fidelity with deep bass, wide soundstage, and vivid vocal clarity — tuned to your ears',
+    need:'Music, calls, and podcasts sound flat or muddy through most earbuds — I\'m missing detail the artist put there',
     needSev:2,
-    biz:['Business outcome this branch produces'],
-    sol:[{name:'Feature suite or capability',tech:'Key technical approach',eff:'adequate'}],
-    detail:{confReason:'Why this confidence level for this branch.',
-      sources:['Research or evidence'],
-      belief:'Team belief about this branch\'s importance.',
-      competitors:[{n:'Alternative',d:'How competitors address this'}],
-      notes:'PLACEHOLDER — replace with actual category outcome'}},
+    biz:['Premium justification — sound quality validates the price premium over AirPods 4','Apple Music attach — immersive audio drives Spatial Audio / Dolby Atmos / lossless adoption'],
+    sol:[{name:'Multiport acoustic architecture',tech:'New acoustic system with precise airflow control · custom driver + amplifier · inward-facing mic pointing into ear canal · H2 chip processing',eff:'strong'}],
+    detail:{confReason:'Apple redesigned the acoustic architecture from scratch for Pro 3 — the most significant sound quality upgrade in the Pro line.<sup class="fn" title="Apple Newsroom">1</sup> Reviews confirm transformed bass response and wider soundstage vs Pro 2.<sup class="fn" title="SoundGuys">2</sup>',
+      sources:['1. Apple Newsroom: AirPods Pro 3 multiport acoustic architecture detail','2. SoundGuys review: confirms improved bass and soundstage','3. MacRumors: 8 new features recap (Sept 2025)'],
+      belief:'Sound quality in premium TWS is reaching parity among top competitors. Personalization (Adaptive EQ, Personalized Spatial Audio) is the real battleground — not raw driver quality.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Audiophile-grade sound quality with LDAC support. Arguably still the sound quality leader for Android users.'},{n:'Bose QC Ultra Earbuds',d:'CustomTune personalization. Good but not class-leading sound.'},{n:'Samsung Galaxy Buds3 Pro',d:'Strong sound quality with 360 Audio. Competitive in the Android ecosystem.'},{n:'Sennheiser Momentum TW4',d:'Audiophile pedigree. Best raw sound in category for many reviewers. No ecosystem integration.'}],
+      notes:'Tagged as battleground because Sony, Sennheiser, and Bose all compete credibly on sound quality. Apple\'s advantage is ecosystem personalization (Spatial Audio syncing across devices) rather than raw fidelity.'}},
+
+  {id:'c-wear', evs:true, diff:'ts', conf:'high',
+    label:'Wear them all day without thinking about them',
+    sub:'Secure fit, lasting battery, and durability that handles real life — gym, rain, commute, all of it',
+    need:'Earbuds fall out during exercise, die mid-commute, or can\'t handle sweat and rain — I have to plan around their limitations',
+    needSev:2,
+    biz:['Usage frequency — comfortable earbuds get worn more hours = more ecosystem engagement','Replacement cycle — durability affects NPS and repeat purchase timing'],
+    detail:{confReason:'Fit, battery, and durability are baseline expectations for $249 earbuds. Apple invested heavily in fit research (10,000+ ear scans, 100,000+ hours testing) and upgraded to IP57.<sup class="fn" title="Apple Newsroom">1</sup> Battery improved to 8hr ANC (from 6hr on Pro 2).<sup class="fn" title="MacRumors">2</sup>',
+      sources:['1. Apple Newsroom: fit research and IP57 certification detail','2. MacRumors: battery life comparison Pro 3 vs Pro 2','3. SoundGuys: fit and comfort assessment'],
+      belief:'Fit is the most underrated driver of earphone satisfaction. Most "sound quality" complaints are actually fit/seal issues. Apple\'s investment in ear scanning data is a long-term moat.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Smaller design than XM4. Good fit but foam tips polarize users. IPX4 only — significantly less durable.'},{n:'Bose QC Ultra Earbuds',d:'Excellent fit stability system. IPX4. Battery: 6hr ANC.'},{n:'Samsung Galaxy Buds3 Pro',d:'IP57 — matches Apple. Blade design is love/hate for fit. 6hr ANC battery.'},{n:'Beats Fit Pro',d:'Wingtips for exercise stability. Best workout fit in Apple ecosystem. IPX4.'}],
+      notes:'Table stakes because every competitor must deliver acceptable fit/battery/durability. Apple\'s IP57 rating and 8hr battery are category-leading but not differentiated enough to be a primary purchase driver.'}},
+
+  // CATEGORIES — NON-EVS
+  {id:'c-hearing', evs:false, star:true, diff:'unc', conf:'high',
+    label:'Protect and improve my hearing',
+    sub:'The world\'s first all-in-one hearing health experience — test, aid, and protect',
+    need:'Over a billion people worldwide are affected by hearing loss, and most don\'t know it\'s happening until it\'s too late — hearing damage is invisible and irreversible',
+    needSev:3,
+    biz:['New market creation — transform consumer earbuds into FDA-authorized medical devices','TAM expansion — reach 1B+ people with hearing loss who don\'t own hearing aids','Brand halo — "Apple cares about your health" narrative extends from Watch to AirPods','Regulatory moat — FDA authorization is a meaningful barrier to competitors'],
+    sol:[{name:'End-to-end hearing health',tech:'Scientifically validated Hearing Test · clinical-grade Hearing Aid (FDA-authorized) · active Hearing Protection (48,000x/sec ML) · automatic Conversation Boost',eff:'strong'}],
+    detail:{confReason:'This is Apple\'s most distinctive and defensible branch. No competitor offers hearing test + hearing aid + hearing protection in consumer earbuds.<sup class="fn" title="Apple Newsroom 2024">1</sup> FDA authorization creates a regulatory moat.<sup class="fn" title="FDA authorization">2</sup> The severity of global hearing loss (1.5B affected) validates the need.<sup class="fn" title="WHO">3</sup>',
+      sources:['1. Apple Newsroom: hearing health features announcement (Sept 2024)','2. FDA: De Novo authorization for AirPods Pro hearing aid functionality','3. WHO: World Report on Hearing — 1.5 billion people live with hearing loss','4. Apple: AirPods Pro 3 hearing health improvements (Sept 2025)'],
+      belief:'Hearing health will become the primary strategic narrative for AirPods Pro within 2–3 years — more important than ANC or sound quality in long-term differentiation. The Pro 3 improvements (broader test conditions, automatic Conversation Boost, 67% better hearing aid battery) show Apple investing aggressively.',
+      competitors:[{n:'Sony',d:'No hearing health features. No FDA pathway.'},{n:'Bose',d:'Bose SoundControl hearing aids exist but as separate $850 products — not integrated into consumer earbuds.'},{n:'Samsung',d:'Galaxy Buds have ambient sound amplification but no validated hearing test, no FDA hearing aid, no active protection.'},{n:'Jabra',d:'Exited consumer market (2024). Had hearing enhancement features. No longer competing.'}],
+      notes:'Tagged as uncontested because no competitor offers the full test→aid→protect pipeline in consumer earbuds. Non-EVS because you can compete in premium TWS without hearing health (Sony and Bose prove this). Starred as key differentiator because this is where Apple decisively wins.'}},
+
+  {id:'c-fitness', evs:false, star:true, diff:'diff', conf:'medium',
+    label:'Track my workout from my ears',
+    sub:'Heart rate, calories, and workout coaching without needing a watch',
+    need:'I want fitness data during workouts but don\'t want to wear (or buy) a smartwatch just for heart rate',
+    needSev:2,
+    biz:['Apple Watch cannibalization risk — balanced by Fitness+ and ecosystem deepening','Fitness+ attach — AirPods-only workout experience drives subscription revenue','Ecosystem entry point — fitness without Watch lowers barrier to Apple Health engagement'],
+    sol:[{name:'Heart rate sensing + Fitness app',tech:'Custom-built heart rate sensor · infrared LED pulsing 256x/sec · accelerometer sensor fusion · Fitness app workout experience · Move ring · Workout Buddy (Apple Intelligence)',eff:'adequate'}],
+    detail:{confReason:'Heart rate from earbuds is a first for AirPods and a strong differentiator, but ear-based HR sensing has accuracy limitations vs wrist/chest sensors.<sup class="fn" title="Limitations of in-ear PPG">1</sup> Apple\'s "adequate" framing — 50 workout types, Fitness app integration — is impressive, but real-world accuracy data is limited.<sup class="fn" title="SoundGuys review">2</sup> Medium confidence because this is gen 1 of a new sensing modality.',
+      sources:['1. General limitation: in-ear photoplethysmography accuracy varies with fit and motion','2. SoundGuys: AirPods Pro 3 heart rate sensing assessment','3. Apple: Fitness app workout experience detail'],
+      belief:'Fitness sensing from earbuds will improve rapidly. Gen 1 is a land grab — establishing the behavior and data pipeline matters more than gen 1 accuracy. Beats Fit Pro 2 already proved the concept; AirPods Pro 3 brings it to the flagship.',
+      competitors:[{n:'Beats Fit Pro (Powerbeats Pro 2)',d:'Had heart rate sensing first in Apple ecosystem. Exercise-focused design. AirPods Pro 3 brings it to a broader audience.'},{n:'Samsung Galaxy Buds',d:'No heart rate sensing in buds. Relies on Galaxy Watch for fitness data.'},{n:'Sony',d:'No fitness sensing.'},{n:'Bose',d:'No fitness sensing.'},{n:'Amazfit',d:'Budget earbuds with HR sensing exist but lack ecosystem integration and accuracy.'}],
+      notes:'Tagged "differentiated" (not uncontested) because Powerbeats Pro 2 and some budget earbuds have HR sensing. Apple\'s advantage is the ecosystem integration — Fitness app, Move ring, Fitness+, Health app pipeline. Medium confidence because gen-1 accuracy is unproven at scale.'}},
+
+  {id:'c-smart', evs:false, diff:'ts', conf:'medium',
+    label:'Do more without reaching for my phone',
+    sub:'Translation, voice control, gestures, and seamless switching across Apple devices',
+    need:'I\'m constantly pulling out my phone for simple tasks — skipping tracks, answering calls, checking things — and my earbuds should handle more of this',
+    needSev:1,
+    biz:['Ecosystem stickiness — seamless switching across Apple devices increases switching cost','Apple Intelligence showcase — AirPods as the audio interface for on-device AI','Services enablement — Siri interactions drive Apple Music, Messages, and app engagement'],
+    detail:{confReason:'Smart features are a mixed bag: some (auto-switching, Siri) are mature and table-stakes; others (Live Translation) are beta with significant limitations.<sup class="fn" title="SoundGuys review">1</sup> Medium confidence because the most exciting feature (Live Translation) needs more development.',
+      sources:['1. SoundGuys: Live Translation assessment — "too slow for comfortable conversation"','2. Apple: Live Translation language support and beta status','3. MacRumors: AirPods Pro 3 smart features overview'],
+      belief:'Smart features are the long game for AirPods — Apple Intelligence integration will make earbuds the primary AI interaction surface. But today, most smart features are "nice to have" rather than purchase drivers.',
+      competitors:[{n:'Google Pixel Buds Pro 2',d:'Google Assistant integration is arguably superior for smart features. Real-time translation via Google Translate is more mature.'},{n:'Samsung Galaxy Buds3 Pro',d:'Galaxy AI integration for live translation. Strong Android ecosystem switching.'},{n:'Sony',d:'Minimal smart features beyond basic voice assistant passthrough.'},{n:'Nothing Ear (3)',d:'ChatGPT integration — novel approach to AI-in-earbuds. Limited ecosystem.'}],
+      notes:'Non-EVS and table stakes competitive position — every premium earbud has voice assistant and basic smart features. Apple\'s edge is ecosystem depth (auto-switching, Audio Sharing across Apple devices) rather than any single smart feature. Live Translation is the most exciting feature here but needs to mature.'}},
 ];
 
 const F = [
-  // FEATURES — child outcomes within categories
-  {id:'f-ex1', parent:'c-example', idx:0, evs:true, conf:'medium',
-    label:'Feature outcome 1',
-    sub:'Specific outcome this feature enables',
-    need:'Specific user problem',
+  // === c-noise: Block out the world or let it in ===
+  {id:'f-anc', parent:'c-noise', idx:0, evs:true, diff:'bg', conf:'high',
+    label:'Stay fully immersed — nothing gets through',
+    sub:'Up to 2x more ANC than AirPods Pro 2, and 4x more than the original — the world\'s best in-ear ANC',
+    need:'Background noise on planes, trains, and open offices makes it impossible to focus or enjoy music',
+    needSev:3,
+    sol:[{name:'Active Noise Cancellation',tech:'Ultra-low-noise microphones · H2 chip computational audio · foam-infused ear tips for passive isolation',eff:'strong'}],
+    detail:{confReason:'Apple\'s ANC claim is supported by independent reviews confirming significant improvement.<sup class="fn" title="SoundGuys">1</sup> The combination of improved microphones, H2 processing, and new foam tips creates both active and passive isolation gains.',
+      sources:['1. SoundGuys: ANC performance assessment','2. MacRumors: 2x ANC improvement confirmed'],
+      belief:'Raw ANC performance is approaching physical limits for in-ear form factor. Future gains will come from intelligence (what to block, when) rather than raw attenuation.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Was the ANC leader. Pro 3 likely matches or exceeds.'},{n:'Bose QC Ultra',d:'Strong ANC. Close competition.'}],
+      notes:'Battleground because Sony and Bose compete at similar levels. Apple\'s marketing claim of "world\'s best" is plausible but not uncontested.'}},
+
+  {id:'f-transparency', parent:'c-noise', idx:1, evs:true, diff:'diff', conf:'high',
+    label:'Hear the world around you when you need to',
+    sub:'More personalized Transparency — your own voice and people speaking to you sound more natural than ever',
+    need:'I don\'t always want isolation — I need to hear traffic, conversations, announcements without removing my earbuds',
     needSev:2,
-    sol:[{name:'Solution name',tech:'Technical approach',eff:'adequate'}],
-    detail:{confReason:'Evidence for this feature outcome.',
-      notes:'PLACEHOLDER — replace with actual feature outcome'}},
+    sol:[{name:'Transparency + Conversation Awareness',tech:'Passthrough audio processing · voice detection · automatic volume lowering when someone speaks · personalized voice rendering',eff:'strong'}],
+    detail:{confReason:'Apple\'s Transparency mode has been best-in-class since AirPods Pro 1.<sup class="fn" title="General consensus">1</sup> Pro 3 adds personalized voice rendering and improved Conversation Awareness. This is a genuine differentiator.',
+      sources:['1. Consensus across major review outlets: Apple leads on transparency mode quality'],
+      belief:'Transparency quality is an underrated differentiator — most people use earbuds in mixed environments where they need to toggle between isolation and awareness constantly.',
+      competitors:[{n:'Sony',d:'Ambient Sound mode is functional but not as natural as Apple\'s.'},{n:'Bose',d:'Aware mode is good. Not as seamless as Apple\'s auto-switching.'},{n:'Samsung',d:'Ambient mode adequate but not differentiated.'}],
+      notes:'Tagged "differentiated" because Apple\'s transparency mode is consistently rated best-in-class across reviews, and Conversation Awareness is a genuine innovation.'}},
 
-  {id:'f-ex2', parent:'c-example', idx:1, evs:true, conf:'low',
-    label:'Feature outcome 2 — needs articulation',
-    sub:'What will be true for users?',
-    need:'What problem does this solve?',
+  {id:'f-adaptive', parent:'c-noise', idx:2, evs:true, diff:'diff', conf:'high',
+    label:'Get the right mix without touching anything',
+    sub:'Adaptive Audio seamlessly blends ANC and Transparency for the best experience in any environment',
+    need:'Manually switching between noise cancellation and transparency is annoying — I want it to just know what I need',
+    needSev:2,
+    sol:[{name:'Adaptive Audio',tech:'ML-driven dynamic blending of ANC and Transparency · real-time environmental analysis · Personalized Volume learning',eff:'strong'}],
+    detail:{confReason:'Adaptive Audio is Apple\'s most innovative noise control feature — no competitor has a direct equivalent that works as seamlessly.<sup class="fn" title="Apple feature set">1</sup> Personalized Volume adds a learning layer that improves over time.',
+      sources:['1. Apple: Adaptive Audio and Personalized Volume description'],
+      belief:'Automatic, intelligent mode switching is the future of noise control. Manual ANC/transparency toggles will feel primitive within 2–3 years.',
+      competitors:[{n:'Sony',d:'Adaptive Sound Control exists but is more basic — location-based rules rather than real-time ML blending.'},{n:'Bose',d:'No equivalent adaptive mode.'},{n:'Samsung',d:'Adaptive Noise Control is rule-based, not ML-driven.'}],
+      notes:'Differentiated because Apple\'s implementation is the most seamless. This is where the intelligence layer creates real distance from competitors.'}},
+
+  // === c-sound: Hear every note ===
+  {id:'f-audio', parent:'c-sound', idx:0, evs:true, diff:'bg', conf:'high',
+    label:'Deeper bass, wider soundstage, vivid vocal clarity',
+    sub:'A completely new acoustic architecture with precise airflow control transforms the listening experience',
+    need:'Previous-gen earbuds had good sound but lacked the bass depth and instrument separation of over-ear headphones',
+    needSev:2,
+    sol:[{name:'Multiport acoustic architecture',tech:'New airflow control system · inward-facing microphone pointing into ear canal · custom-built driver + amplifier · H2 chip low-distortion processing',eff:'strong'}],
+    detail:{confReason:'The multiport architecture is a hardware redesign, not a software tweak — Apple rebuilt the acoustic path from scratch.<sup class="fn" title="Apple Newsroom">1</sup> Reviews confirm the bass and soundstage improvement is audible and significant.<sup class="fn" title="SoundGuys">2</sup>',
+      sources:['1. Apple Newsroom: multiport acoustic architecture technical detail','2. SoundGuys: sound quality assessment confirms improvement over Pro 2'],
+      belief:'Hardware acoustic architecture matters more than codec support for most listeners. Apple\'s lack of LDAC/aptX doesn\'t hurt because AAC + hardware design delivers a great experience for the Apple ecosystem.',
+      competitors:[{n:'Sony WF-1000XM5',d:'LDAC support, exceptional tuning. Many audiophiles still prefer Sony.'},{n:'Sennheiser Momentum TW4',d:'Arguably best raw sound in category. Audiophile pedigree.'},{n:'Bose QC Ultra',d:'Good sound but not a sound quality leader.'}],
+      notes:'Battleground — Sony and Sennheiser compete credibly. Apple\'s edge is ecosystem personalization, not raw fidelity.'}},
+
+  {id:'f-spatial', parent:'c-sound', idx:1, evs:true, diff:'diff', conf:'high',
+    label:'Sound that surrounds you, tuned to your ears',
+    sub:'Personalized Spatial Audio with dynamic head tracking creates an immersive experience suited to your unique ear geometry',
+    need:'Standard stereo audio feels flat and disconnected from the content — especially for movies, shows, and immersive music',
     needSev:1,
-    detail:{notes:'PLACEHOLDER — needs team input to articulate this outcome'}},
-];
+    sol:[{name:'Personalized Spatial Audio + Adaptive EQ',tech:'TrueDepth camera ear scan · head tracking · next-gen Adaptive EQ customizing sound to ear geometry and fit · Dolby Atmos support',eff:'strong'}],
+    detail:{confReason:'Apple has the strongest spatial audio ecosystem — content (Apple Music Atmos, Apple TV+), personalization (ear scan), and cross-device syncing.<sup class="fn" title="Apple ecosystem">1</sup> No competitor matches the end-to-end integration.',
+      sources:['1. Apple: Personalized Spatial Audio cross-device syncing'],
+      belief:'Spatial audio is a differentiator that deepens over time as more content is mastered in Dolby Atmos. The personalization (ear scan) creates a meaningful quality gap.',
+      competitors:[{n:'Sony',d:'360 Reality Audio is good but content library is smaller. No cross-device syncing.'},{n:'Samsung',d:'360 Audio exists. Content ecosystem is thinner.'}],
+      notes:'Differentiated because Apple\'s end-to-end spatial audio ecosystem (content + hardware + personalization + syncing) is unmatched. Minor need severity because most content isn\'t spatial yet.'}},
 
+  {id:'f-calls', parent:'c-sound', idx:2, evs:true, diff:'ts', conf:'medium',
+    label:'Sound crystal clear on every call',
+    sub:'Voice Isolation reduces background noise on calls so you can be heard clearly in any environment',
+    need:'People on the other end complain about background noise during my calls — cafes, streets, wind',
+    needSev:2,
+    sol:[{name:'Voice Isolation',tech:'Computational audio voice extraction · beamforming microphones · ML noise separation · studio-quality recording (iOS 26)',eff:'adequate'}],
+    detail:{confReason:'Call quality is important but reviews are mixed on whether Apple leads here. Voice Isolation helps but still has limitations in very noisy environments.<sup class="fn" title="SoundGuys mic assessment">1</sup> Studio-quality recording in iOS 26 is a new addition that adds value for creators.',
+      sources:['1. SoundGuys: microphone and call quality samples'],
+      belief:'Call quality is a hygiene factor — it needs to be good enough that nobody complains, but it rarely drives purchase decisions.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Good call quality but not exceptional.'},{n:'Bose QC Ultra',d:'Strong call quality.'},{n:'Google Pixel Buds Pro 2',d:'Google\'s ML-powered noise suppression is competitive.'}],
+      notes:'Table stakes — adequate call quality is expected. Voice Isolation is functional but not a differentiator. Studio-quality recording could be valuable for creators but is a niche use case.'}},
+
+  // === c-wear: Wear them all day without thinking about them ===
+  {id:'f-fit', parent:'c-wear', idx:0, evs:true, diff:'ts', conf:'high',
+    label:'Fit securely in any ear, all day',
+    sub:'Smaller design, foam-infused ear tips in five sizes (XXS–L), and rotated geometry for the most secure fit ever',
+    need:'One-size ear tips don\'t work for everyone — earbuds pop out during exercise, feel uncomfortable after an hour, or just never seal properly',
+    needSev:3,
+    sol:[{name:'Redesigned fit system',tech:'10,000+ ear scans · 100,000+ hours testing · smaller earbud body · foam-infused microsphere tips · 5 sizes (XXS–L) · centered tip geometry',eff:'strong'}],
+    detail:{confReason:'Apple\'s fit investment is industry-leading in terms of R&D scale.<sup class="fn" title="Apple Newsroom">1</sup> The new XXS size and foam tips address the most common fit complaints. However, some reviewers note fit stability still isn\'t perfect for all ear shapes.<sup class="fn" title="SoundGuys">2</sup>',
+      sources:['1. Apple Newsroom: fit research data (10,000 ear scans)','2. SoundGuys: "doesn\'t fully solve fit stability issues some users had"'],
+      belief:'Fit is the most underrated differentiator in earbuds. Most "sound quality" complaints are actually seal issues. Apple\'s ear scan dataset is a long-term advantage.',
+      competitors:[{n:'Sony WF-1000XM5',d:'Good fit. Foam tips included. Smaller than XM4.'},{n:'Bose QC Ultra',d:'Stability Band system — excellent exercise fit.'},{n:'Beats Fit Pro',d:'Wingtips provide the best exercise stability in Apple ecosystem.'}],
+      notes:'Table stakes — every $249 earbud must fit well. Apple\'s R&D scale is impressive but fit is inherently personal and no earbud fits everyone perfectly.'}},
+
+  {id:'f-battery', parent:'c-wear', idx:1, evs:true, diff:'ts', conf:'high',
+    label:'Go all day and then some',
+    sub:'Up to 8 hours of listening with ANC, up to 10 hours in Transparency — and 5 minutes charging gives an hour of playback',
+    need:'Earbuds dying mid-commute or mid-workout is infuriating — I need them to last a full day',
+    needSev:2,
+    sol:[{name:'Extended battery system',tech:'8hr ANC · 10hr Transparency · 24hr total with case · 5min quick charge = 1hr · MagSafe + Qi + USB-C + Apple Watch charger',eff:'strong'}],
+    detail:{confReason:'8hr ANC is a significant improvement from Pro 2\'s 6hr and beats most competitors.<sup class="fn" title="MacRumors">1</sup> The 24hr case total is slightly less than Pro 2\'s 30hr but the per-charge improvement matters more for daily use.',
+      sources:['1. MacRumors: battery comparison Pro 3 vs Pro 2'],
+      belief:'Per-charge battery life matters more than total case battery for daily perception. 8hr ANC means most people can get through a full workday without charging.',
+      competitors:[{n:'Sony WF-1000XM5',d:'8hr ANC with case providing 24hr total. Essentially tied.'},{n:'Bose QC Ultra',d:'6hr ANC. Below Apple and Sony.'},{n:'Samsung Galaxy Buds3 Pro',d:'6hr ANC. Below leaders.'}],
+      notes:'Table stakes — 6–8hr ANC is the expectation. Apple\'s 8hr ties with Sony for category-best but isn\'t a differentiator.'}},
+
+  {id:'f-durable', parent:'c-wear', idx:2, evs:true, diff:'ts', conf:'high',
+    label:'Handle sweat, rain, and daily life',
+    sub:'The first AirPods with IP57 — can handle the sweatiest workouts and even a sudden downpour',
+    need:'I work out hard and get caught in rain — I need earbuds that won\'t die from moisture or dust',
+    needSev:2,
+    sol:[{name:'IP57 dust and water resistance',tech:'IP57 certification (dust-tight, temporary immersion to 1m) · precision engineering + robust testing',eff:'strong'}],
+    detail:{confReason:'IP57 is a meaningful upgrade from Pro 2\'s IPX4 — adds dust protection and deeper water resistance.<sup class="fn" title="MacRumors">1</sup> This matches Samsung Galaxy Buds3 Pro and exceeds Sony and Bose.',
+      sources:['1. MacRumors: IP57 rating detail and comparison'],
+      belief:'IP57 removes a worry — exercisers and outdoor users no longer need to think about whether their earbuds can handle conditions.',
+      competitors:[{n:'Sony WF-1000XM5',d:'IPX4 only — no dust protection, less water resistance.'},{n:'Bose QC Ultra',d:'IPX4.'},{n:'Samsung Galaxy Buds3 Pro',d:'IP57 — matches Apple.'}],
+      notes:'Table stakes because water resistance is expected. The IP57 upgrade is welcome but unlikely to drive purchase decisions.'}},
+
+  {id:'f-case', parent:'c-wear', idx:3, evs:true, diff:'ts', conf:'high',
+    label:'Find, charge, and carry them anywhere',
+    sub:'MagSafe charging, Find My with Precision Finding, built-in speaker, lanyard loop — the case is a tool, not just a container',
+    need:'I lose my earbuds constantly, the case is always dead, and I forget to bring a charger',
+    needSev:1,
+    sol:[{name:'MagSafe Charging Case',tech:'MagSafe + Qi wireless + USB-C + Apple Watch charger · U2 chip for Precision Finding at 1.5x distance · built-in speaker for Find My · lanyard loop',eff:'strong'}],
+    detail:{confReason:'Apple\'s case is the most capable in the category. Precision Finding, MagSafe, and Apple Watch charger compatibility are genuine conveniences.<sup class="fn" title="Apple specs">1</sup>',
+      sources:['1. Apple: MagSafe Charging Case feature set'],
+      belief:'The case is an underrated part of the daily experience — charging flexibility and Find My integration reduce daily friction.',
+      competitors:[{n:'Sony',d:'Basic USB-C case. No wireless charging on standard model. No find-my equivalent.'},{n:'Bose',d:'USB-C case. Basic.'},{n:'Samsung',d:'Qi wireless + USB-C. SmartThings Find. Competitive but less capable.'}],
+      notes:'Table stakes — a good case is expected. Apple\'s implementation is best-in-class but the case alone doesn\'t drive purchases.'}},
+
+  // === c-hearing: Protect and improve my hearing ===
+  {id:'f-test', parent:'c-hearing', idx:0, evs:false, star:true, diff:'unc', conf:'high',
+    label:'Know where my hearing stands',
+    sub:'A scientifically validated Hearing Test you can take in broader everyday conditions — not just a quiet room',
+    need:'I suspect my hearing isn\'t what it used to be but getting a hearing test means booking an appointment, taking time off work, and paying for an audiologist',
+    needSev:2,
+    sol:[{name:'Hearing Test',tech:'Scientifically validated audiometry · works in broader background conditions with Pro 3 · paired with iPhone/iPad · results stored in Health app',eff:'strong'}],
+    detail:{confReason:'Apple\'s Hearing Test is scientifically validated and the only consumer earbud-based hearing test available.<sup class="fn" title="Apple + FDA">1</sup> Pro 3 improves usability by working in more background noise conditions.',
+      sources:['1. Apple: scientifically validated Hearing Test announcement','2. FDA: regulatory pathway for consumer hearing assessment'],
+      belief:'Lowering the barrier to hearing assessment is genuinely important public health work. Most hearing loss goes undiagnosed because testing is inconvenient.',
+      competitors:[{n:'No direct competitor',d:'No other consumer earbuds offer a validated hearing test. Some apps exist but lack earphone calibration.'}],
+      notes:'Uncontested. Starred as key differentiator.'}},
+
+  {id:'f-aid', parent:'c-hearing', idx:1, evs:false, star:true, diff:'unc', conf:'high',
+    label:'Hear conversations clearly again',
+    sub:'Clinical-grade Hearing Aid with automatic Conversation Boost and 67% more battery life in Transparency',
+    need:'Mild to moderate hearing loss makes conversations in noisy environments exhausting — I miss words, ask people to repeat, and withdraw from social situations',
+    needSev:3,
+    sol:[{name:'Hearing Aid feature',tech:'FDA-authorized clinical-grade amplification · NAL-NL2 targets for speech clarity · automatic Conversation Boost · 10hr battery in Transparency · personalized hearing profile',eff:'strong'}],
+    detail:{confReason:'FDA-authorized hearing aid functionality in consumer earbuds is unprecedented.<sup class="fn" title="FDA">1</sup> Clinical-grade amplification matching NAL-NL2 targets means this isn\'t a gimmick — it\'s a legitimate hearing aid.<sup class="fn" title="Gadget Hacks">2</sup> Automatic Conversation Boost in Pro 3 removes a manual step.',
+      sources:['1. FDA: De Novo authorization for OTC hearing aid functionality','2. Gadget Hacks: NAL-NL2 target matching assessment'],
+      belief:'This is the most strategically important feature Apple has added to AirPods. It transforms a consumer electronics product into a medical device — at consumer electronics prices.',
+      competitors:[{n:'Bose SoundControl',d:'$850 dedicated hearing aids. Not integrated into consumer earbuds.'},{n:'Sony',d:'No hearing aid capability.'},{n:'Samsung',d:'Ambient amplification only — not FDA-authorized, not clinically calibrated.'}],
+      notes:'Uncontested. Starred. The combination of FDA authorization + consumer pricing + no social stigma (they look like regular earbuds) is transformative.'}},
+
+  {id:'f-protect', parent:'c-hearing', idx:2, evs:false, star:true, diff:'unc', conf:'high',
+    label:'Stop loud environments from damaging my hearing',
+    sub:'Active Hearing Protection reduces loud noise 48,000 times per second while maintaining natural sound quality',
+    need:'Concerts, construction, loud restaurants, and daily commutes are gradually damaging my hearing without me realizing it',
+    needSev:2,
+    sol:[{name:'Hearing Protection',tech:'ML on H2 chip processing 48,000x/sec · real-time noise reduction · maintains natural sound character · passive protection from ear tips',eff:'strong'}],
+    detail:{confReason:'Active hearing protection that works in real-time while maintaining sound quality is technically impressive and unique to Apple.<sup class="fn" title="Apple">1</sup> Not suitable for extremely loud impulse sounds (gunfire, fireworks) — has clear limitations.',
+      sources:['1. Apple: Hearing Protection feature detail and limitations'],
+      belief:'Passive hearing protection (earplugs) already exists, but active protection that maintains sound quality is genuinely new. The "protection" frame — preventing future damage — is a powerful motivator for younger users.',
+      competitors:[{n:'No direct competitor',d:'Standard earbuds provide some passive noise reduction but no active, intelligent hearing protection.'}],
+      notes:'Uncontested. Starred. Note limitation: not suitable for extremely loud impulse sounds. Available in US and Canada only.'}},
+
+  // === c-fitness: Track my workout from my ears ===
+  {id:'f-hr', parent:'c-fitness', idx:0, evs:false, star:true, diff:'diff', conf:'medium',
+    label:'Track heart rate and calories without a watch',
+    sub:'The smallest heart rate sensor ever in an Apple product, pulsing invisible light 256 times per second',
+    need:'I want real-time workout data but don\'t want the bulk, expense, or tan lines of a fitness watch',
+    needSev:2,
+    sol:[{name:'In-ear heart rate sensor',tech:'Custom infrared LED · 256 pulses/sec · accelerometer sensor fusion · real-time HR display in Fitness app · calorie tracking · Move ring',eff:'adequate'}],
+    detail:{confReason:'First-generation in-ear HR sensing. Apple\'s sensor fusion (infrared + accelerometer) should improve accuracy over simple PPG.<sup class="fn" title="Apple">1</sup> But ear-based sensing is inherently less reliable than wrist or chest. "Adequate" effectiveness reflects gen-1 uncertainty.',
+      sources:['1. Apple: heart rate sensor technical detail'],
+      belief:'Accuracy will improve with future generations. The strategic value is establishing the behavior — people tracking workouts with AirPods — not gen-1 accuracy.',
+      competitors:[{n:'Powerbeats Pro 2',d:'Had heart rate sensing first in Apple ecosystem. Exercise-optimized form factor.'},{n:'Amazfit earbuds',d:'Budget HR-sensing earbuds exist but accuracy and ecosystem integration are poor.'},{n:'Samsung Galaxy Buds',d:'No heart rate sensing.'}],
+      notes:'Differentiated (not uncontested — Powerbeats Pro 2 was first). Starred because it creates a genuinely new use case. Medium confidence because gen-1 accuracy is unproven at scale.'}},
+
+  {id:'f-workout', parent:'c-fitness', idx:1, evs:false, diff:'diff', conf:'medium',
+    label:'Get coached through any workout',
+    sub:'50 workout types in Fitness app, AI-powered Workout Buddy, Move ring and Burn Bar access, auto-play music when you start',
+    need:'I want guidance and motivation during workouts — not just data after the fact',
+    needSev:1,
+    sol:[{name:'AirPods workout experience',tech:'Fitness app integration · 50 workout types · Workout Buddy (Apple Intelligence motivational coaching) · Move ring + awards · Fitness+ integration · auto-play music on workout start',eff:'adequate'}],
+    detail:{confReason:'The workout experience is feature-rich but depends on Fitness app and iOS 26.<sup class="fn" title="Apple">1</sup> Workout Buddy (AI coaching) is promising but unproven. Fitness+ integration adds value but requires subscription.',
+      sources:['1. Apple: Fitness app workout experience and Workout Buddy detail'],
+      belief:'The workout coaching layer is more important than the raw data. Apple Intelligence-powered motivation could be compelling if the tone is right.',
+      competitors:[{n:'Apple Watch',d:'Still the far superior fitness device. AirPods fitness is complementary, not competitive.'},{n:'Garmin',d:'Dominant in serious fitness. Not competing in the same space.'},{n:'Peloton / other apps',d:'Subscription fitness apps work with any earbuds.'}],
+      notes:'Differentiated through ecosystem integration. Adequate effectiveness because the coaching AI is new and the experience depends on subscription services.'}},
+
+  // === c-smart: Do more without reaching for my phone ===
+  {id:'f-translate', parent:'c-smart', idx:0, evs:false, diff:'bg', conf:'low',
+    label:'Communicate across languages in real time',
+    sub:'Live Translation captures speech and translates it directly into your ear — speak naturally, hear naturally',
+    need:'I travel or interact with people who speak different languages and communication is awkward, slow, or impossible',
+    needSev:2,
+    sol:[{name:'Live Translation',tech:'Apple Intelligence on-device translation · AirPods + iPhone · supports 1:1 and group · English, French, German, Portuguese, Spanish at launch · more languages coming',eff:'unproven'}],
+    detail:{confReason:'Live Translation is in beta and reviews flag significant limitations: translation speed is too slow for natural conversation, language selection is limited to European languages, and voice isolation in crowded spaces is unreliable.<sup class="fn" title="SoundGuys">1</sup> Low confidence reflects current state, not long-term potential.',
+      sources:['1. SoundGuys: "too slow for comfortable conversation" and "missing widely spoken languages"','2. Apple: Live Translation beta status and language support'],
+      belief:'Real-time translation is the most futuristic feature in the lineup but it needs 2–3 more iterations to be genuinely useful. Current state is more demo than daily tool.',
+      competitors:[{n:'Google Pixel Buds Pro 2',d:'Google Translate integration is more mature and supports far more languages. Has had real-time translation for years.'},{n:'Samsung Galaxy Buds3 Pro',d:'Galaxy AI live translation. Also limited but improving.'}],
+      notes:'Battleground because Google has a significant head start in translation quality and language support. Low confidence — this is the least validated feature on the map. Unproven effectiveness.'}},
+
+  {id:'f-siri', parent:'c-smart', idx:1, evs:true, diff:'ts', conf:'high',
+    label:'Control everything with gestures and voice',
+    sub:'Press, swipe, and nod — or just talk to Siri — to manage playback, calls, and notifications without touching your phone',
+    need:'Fishing my phone out of my pocket to skip a track or answer a call breaks my flow',
+    needSev:1,
+    sol:[{name:'Touch controls + Siri Interactions',tech:'Stem press/swipe for playback and volume · head nod/shake for Siri responses · "Hey Siri" or "Siri" wake word · camera control',eff:'strong'}],
+    detail:{confReason:'Touch controls and Siri are mature, well-implemented features. Head nod/shake for Siri is a delightful interaction.<sup class="fn" title="General">1</sup> Camera control from AirPods adds a new convenience.',
+      sources:['1. General review consensus on touch controls and Siri Interactions quality'],
+      belief:'Physical controls on earbuds are essential — voice-only control fails in quiet environments. Apple\'s stem controls are the best tactile implementation in the category.',
+      competitors:[{n:'Sony',d:'Touch surface controls. Functional but less precise than Apple\'s stem.'},{n:'Bose',d:'Touch controls. Good.'},{n:'Samsung',d:'Touch controls. Pinch mechanism on Buds3 Pro.'}],
+      notes:'Table stakes — every premium earbud has controls. EVS because no earbud can ship without a control method. Apple\'s stem and Siri integration are excellent but not a differentiator.'}},
+
+  {id:'f-ecosystem', parent:'c-smart', idx:2, evs:false, diff:'diff', conf:'high',
+    label:'Switch seamlessly between all my Apple devices',
+    sub:'Automatic Switching between iPhone, iPad, Mac, and Apple TV — plus Audio Sharing so two people can listen together',
+    need:'I use multiple devices daily and manually re-pairing Bluetooth is tedious and unreliable',
+    needSev:2,
+    sol:[{name:'Apple ecosystem integration',tech:'Automatic Switching across Apple devices · Audio Sharing · iCloud sync · seamless pairing · Find My network',eff:'strong'}],
+    detail:{confReason:'Ecosystem integration is Apple\'s strongest competitive moat in audio. No competitor can match seamless cross-device switching because it requires controlling both the hardware and OS.<sup class="fn" title="Apple ecosystem advantage">1</sup>',
+      sources:['1. Apple: Automatic Switching and ecosystem feature set'],
+      belief:'Ecosystem integration is the real lock-in — not any single audio feature. Once you\'re in Apple\'s ecosystem, switching to Sony or Bose means losing seamless device switching, Spatial Audio sync, Find My, and more.',
+      competitors:[{n:'Sony',d:'Multipoint Bluetooth connects to 2 devices. Functional but not as seamless as Apple\'s.'},{n:'Samsung',d:'Galaxy ecosystem switching for Samsung device owners. Strong within Samsung, useless outside.'},{n:'Google',d:'Pixel ecosystem is thin. Fast Pair is Android-wide but basic.'}],
+      notes:'Differentiated because no competitor can replicate Apple\'s end-to-end ecosystem integration. This is the strongest switching cost in the product.'}},
+];
 
 /* ============================================================
    ===END DATA=== DO NOT MODIFY BELOW THIS LINE
