@@ -26,30 +26,35 @@ Claude generates an **interactive HTML Root Map** — a zoomable, clickable, edi
 - **Competitive landscape** — how each outcome stacks up against alternatives
 - **Detail panels** — click any node for reasoning, sources, team beliefs, competitor tables, and editable notes
 
-### Built for Working Sessions
+### Interactive Maps
 
-Root Maps are designed to facilitate team alignment, not just document strategy. Every map includes:
-- **Inline editing** — click any node to edit outcomes, needs, business outcomes, and solutions in the detail panel
+Every generated Root Map includes:
+- **Clickable nodes** — click any node to open a detail panel with confidence rationale, competitive landscape, team beliefs, sources, and editable notes
+- **Add/remove** — add business outcomes, solutions, and child nodes directly from the detail panel
+- **Star (★) differentiators** — mark where you distinctively win, separate from EVS (must-have)
+- **Outcome & business indicators** — proposed metrics for how you'd measure each outcome
+- **Keyboard & accessibility** — Tab through nodes, Enter to open, Escape to close; respects reduced motion preferences
+- **Dark mode** — automatic via `prefers-color-scheme`
+- **Zoom & pan** — scroll to zoom, drag to pan, fit-to-viewport on load
+
+### Workshop Template (Advanced)
+
+For live facilitation sessions, an advanced workshop template (`root-map-template-workshop.html`) adds:
+- **Inline editing** — edit outcomes, needs, business outcomes, and solutions directly in the detail panel
 - **Clickable indicators** — change confidence, need strength, and effectiveness by clicking dots
 - **EVS toggle** — flip EVS on/off with automatic parent cascade
-- **Add/remove nodes** — hover any node for a + button; add branches, features, or siblings with framework-aligned prompts
 - **Drag to reposition** — rearrange nodes on the canvas
 - **Undo/redo** — full history with ⌘Z / ⌘⇧Z
 - **Auto-save** — edits persist in browser storage; restore prompt on reload
-- **Save snapshot** — download a self-contained HTML file with edits baked in and a changelog comment
+- **Save snapshot** — download a self-contained HTML file with all edits baked in
 - **Change log** — tracks every edit with before/after and timestamps
-- **Animated connectors** — subtle flow pulses on connector lines showing outcome relationships
+- **Animated connectors** — subtle flow pulses on connector lines
 
 The map is a living conversation artifact. Generate it with Claude, then open it in a browser and facilitate directly — no specialized knowledge required.
 
 ## Quick Start
 
-### Option A: Install as a Skill (recommended)
-1. Download `root-mapping.skill` from [Releases](../../releases)
-2. In Claude → **Customize** → **Skills** → click **+**
-3. Select the `.skill` file — done. Works in every conversation.
-
-### Option B: Use as a Claude Project
+### Use as a Claude Project
 1. Go to [claude.ai](https://claude.ai) → **Projects** → **New Project**
 2. Upload these files from this repo to Project Knowledge:
 

@@ -1,6 +1,6 @@
-# Root Map Visual Spec v3.0
+# Root Map Visual Spec v4.0
 
-Quick-reference for the visual rules in `root-map-template-v3.html`. **The template CSS is the single source of truth** — this file exists so you can check rules without parsing minified CSS. If anything here conflicts with the template, the template wins.
+Quick-reference for the visual rules in `root-map-template-v4.html`. **The template CSS is the single source of truth** — this file exists so you can check rules without parsing minified CSS. If anything here conflicts with the template, the template wins.
 
 ## Color System
 
@@ -105,3 +105,34 @@ Cards are stacked vertically with 4px margin-bottom between them (2px for soluti
 - Button zoom: ±8%
 - Min scale: 0.05, max: 2.0
 - Reset: re-fits to viewport
+
+## v4 Additions
+
+### Star Badge
+- `.star-badge`: 8px gold `★` character, `#C8940A` light / `#E8B84A` dark
+- Positioned after outcome label text with `margin-left:3px`
+
+### Indicators (Detail Panel)
+- `.ind-list` / `.ind-item`: 12px text, 5px dot bullet via `::before`, `--bd` color
+- Shown in detail panel for `indicators[]` and `bizIndicators[]` fields
+
+### Add/Remove (Detail Panel)
+- `.dp-add`: 11px link-style button, `--b600` color, underline on hover
+- `.dp-rm`: 9px `✕` button, `--tl` at 40% opacity, red on hover (`--lo` + `--r50` background)
+- `.dp-act-bar`: action section with "Add child outcome" button, top border separator
+
+### Sub-Feature Support
+- Layout engine detects features whose `parent` is another feature (not in `catCh`)
+- Adds a 4th row at `RY[2]+420` for sub-features
+- Sub-features positioned centered below their parent feature
+
+### Responsive
+- Detail panel: full-width on viewports ≤600px
+- `prefers-reduced-motion`: disables node hover transitions and panel slide animations
+
+### Accessibility
+- Zoom and close buttons have `aria-label` attributes
+- Node containers have `role="button"`, `tabindex="0"`, `aria-label`
+- Enter key opens detail panel on focused node; Escape closes it
+- Focus rings use `outline:2px solid var(--b400)` instead of `outline:none`
+- Minimum text sizes: need cards 10px, severity 9px, EVS badge 8px, diff tags 9px, biz/sol cards 10px

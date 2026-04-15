@@ -433,7 +433,7 @@ For missing ingredients, create nodes with:
 
 ### Visual rules
 
-The template CSS and layout engine are the source of truth for all visual rendering. Do not duplicate CSS values in the data layer. For a readable reference of the template's visual rules (colors, sizes, borders, spacing), see `references/visual-spec-v3.md`.
+The template CSS and layout engine are the source of truth for all visual rendering. Do not duplicate CSS values in the data layer. For a readable reference of the template's visual rules (colors, sizes, borders, spacing), see `references/visual-spec-v4.md`.
 
 Key **conceptual rules** to keep in mind when populating data (these affect data structure, not CSS):
 - All outcome cards are blue. Root, category, feature — same color, different scope.
