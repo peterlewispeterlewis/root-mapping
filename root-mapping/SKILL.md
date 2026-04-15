@@ -31,7 +31,7 @@ The map's primary nodes are **experience outcomes** — always the same color (b
 
 - **Experience outcomes** = the connected nodes. Root, category, feature — all blue, all outcomes.
 - **Inferred needs** = the customer problem each outcome addresses. Attached above the outcome.
-- **Business outcomes** = why the business cares. Attached below relevant outcomes.
+- **Business outcomes** = what's now true for the business if this customer outcome is achieved. Attached below relevant outcomes. Business outcomes are **results**, not solutions or features: talent maturity, customer retention, direct revenue, new market access, reduced support costs, brand authority, data asset growth, regulatory compliance. NOT "AI-powered dashboard" (that's a solution), NOT "users can track metrics" (that's a customer outcome), NOT "improve engagement" (too vague — what business result does engagement produce?).
 - **Solutions** = how we currently propose to produce each outcome. Attached below. Only attach solutions where a concrete one exists.
 - **Metadata** = confidence, evidence, competitive position, tech requirements, effectiveness ratings.
 
@@ -207,6 +207,10 @@ The conversation with Claude IS the iteration engine. The user reviews the map a
 - "The hearing health confidence should be medium"
 - "Add a new feature outcome under Daily"
 - "We decided the fitness branch is EVS after all"
+- "Add a business outcome to the fitness category: 'Recurring subscription revenue from health-conscious segment'"
+- "Remove the business outcome from the awareness branch — that was speculative"
+- "Add a solution to the noise cancellation outcome: 'H2 chip + adaptive mesh filtering'"
+- "Remove the solution from hearing protection — we're pivoting away from that approach"
 - "Here's research that changes our belief about X"
 
 Claude regenerates the HTML incorporating these changes. Each version is a snapshot of the team's evolving beliefs.
@@ -266,39 +270,35 @@ These are errors that have come up repeatedly during Root Map generation. Check 
    - Could it be a **sub-feature** (a control, setting, or implementation detail)? → Too deep for a strategy map — belongs in a design spec, not here
    - When in doubt: start it as a feature. Promote to category only if you discover it needs multiple children.
 
-2. **Outcomes that are really solutions in disguise.** This is the single most common error. An outcome must be solution-agnostic — it describes what's true for the customer, not how it happens. Apply this gate to every label:
+2. **Outcomes that are really features in disguise.** "AI-powered recommendations" is a solution, not an outcome. "Discover what's relevant without searching" is the outcome. Always ask: if the solution changed completely, what would still need to be true?
 
-   > **"If the solution changed completely, would this outcome statement still be true?"**
-   > If no → you've embedded a mechanism. Strip it and state what remains.
+3. **Business outcomes that are really solutions, needs, or user outcomes.** Business outcomes must be things that are **now true for the business** — not features, not customer benefits, not strategies. Test: could a CFO or board member point to this as a business result? "Reduced churn by 15%" yes. "AI-powered analytics dashboard" no (solution). "Users love the product" no (too vague — what business result does that love produce?). "Entered enterprise segment" yes. Good examples: retention, revenue, margin improvement, talent attraction, market expansion, regulatory compliance, data asset growth, brand authority.
 
-   Three patterns to watch for:
-   - **Solution IS the label:** "AI-powered recommendations" → "Discover what's relevant without effort"
-   - **Mechanism smuggled in via preposition:** "Discover content through personalized feed" → "Discover what's relevant without effort" (the "through" phrase is a solution)
-   - **Technology or feature name as shorthand:** "Track progress with real-time dashboard" → "Always know where things stand"
+4. **Missing or wrong parent references.** Every `F[]` item needs a `parent` field matching a category `id` in `O[]`, and that feature's `id` must appear in the parent's array in `catCh`. If these are out of sync, features will be orphaned or misplaced.
 
-   The test is simple: if engineering came back and said "we found a completely different way to achieve this," would the outcome label still make sense? If the label would need to change because the mechanism changed, it's not an outcome.
+5. **catOrd / catCh mismatch.** Every category `id` in `catOrd` must exist as a key in `catCh`, and every key in `catCh` must appear in `catOrd`. Missing entries cause layout failures.
 
-3. **Missing or wrong parent references.** Every `F[]` item needs a `parent` field matching a category `id` in `O[]`, and that feature's `id` must appear in the parent's array in `catCh`. If these are out of sync, features will be orphaned or misplaced.
+6. **Overly abstract outcome language.** "Enhanced audio experience" tells you nothing testable. "Block unwanted noise completely" is something you can verify. Push for concrete, direct language — especially at the feature tier where specificity matters most.
 
-4. **catOrd / catCh mismatch.** Every category `id` in `catOrd` must exist as a key in `catCh`, and every key in `catCh` must appear in `catOrd`. Missing entries cause layout failures.
+7. **Need cards without severity.** Every need should have `needSev: 3|2|1`. Missing severity defaults to no indicator, which looks like a rendering bug.
 
-5. **Overly abstract outcome language.** "Enhanced audio experience" tells you nothing testable. "Block unwanted noise completely" is something you can verify. Push for concrete, direct language — especially at the feature tier where specificity matters most.
+8. **Solutions on everything.** Not every outcome needs a solution card. Only attach solutions where a concrete implementation exists or is proposed. Empty or vague solutions ("TBD") add noise — use placeholder outcomes instead.
 
-6. **Need cards without severity.** Every need should have `needSev: 3|2|1`. Missing severity defaults to no indicator, which looks like a rendering bug.
-
-7. **Solutions on everything.** Not every outcome needs a solution card. Only attach solutions where a concrete implementation exists or is proposed. Empty or vague solutions ("TBD") add noise — use placeholder outcomes instead.
-
-8. **Forgetting the root's need.** The root outcome addresses a need too — the overarching problem the product exists to solve. This is often the most important need statement on the entire map.
+9. **Forgetting the root's need.** The root outcome addresses a need too — the overarching problem the product exists to solve. This is often the most important need statement on the entire map.
 
 ### Pre-Output Checklist
 
 Before saving a Root Map file, review the data section against these checks:
 
+**Hierarchy integrity (does it flow upward?):**
+- For EACH outcome, verify it directly enables its parent. Ask: "If this child outcome becomes true, does it make the parent outcome MORE true?" If you can't articulate the enabling relationship, the hierarchy is broken — the node is either under the wrong parent, at the wrong altitude, or not a real outcome.
+- Read the full chain from any leaf node to root. It should tell a coherent story: "Because [feature outcome] → [category outcome] → [root outcome]." If the chain feels like a stretch at any link, fix the link.
+- Watch for "sibling masquerading as child" — two outcomes that are peers (both enable the same parent) but one has been incorrectly nested under the other.
+
 **Outcome language quality:**
 - Read each `label` field aloud. Is it concrete enough to verify? Could you test whether it's true? If not, rewrite it.
 - Check for corporate-speak: "enhanced," "optimized," "leveraged," "comprehensive" — these are almost always vague. Replace with what the customer actually experiences.
-- **Solution-agnosticism gate (apply to EVERY label):** if the implementation changed completely, would this label still be true? Check for mechanism words: "through," "via," "using," "with," "by" followed by a solution — these are smuggled mechanisms. Strip the mechanism, keep the outcome.
-- Check for technology or feature names embedded in the label — "AI-powered," "real-time," "ML-driven," "dashboard," "feed," "notifications" — these are solutions, not outcomes. State what the customer experiences, not the mechanism.
+- Check for solution-as-outcome: if the label describes a technology or feature name rather than what it enables, you've written a solution, not an outcome.
 
 **Confidence variation:**
 - If every outcome is `conf: 'high'`, you haven't thought hard enough. A map with uniform confidence is a map where nobody questioned anything. Vary confidence honestly — low confidence on a node is more useful than false certainty.
@@ -314,16 +314,22 @@ Before saving a Root Map file, review the data section against these checks:
 
 Outcome statements should be:
 
-- **Concrete and testable** — "Block unwanted noise completely" not "Improve audio experience"
-- **Framed as customer benefit** — what THEY can do, not what WE built
-- **Confident and direct** — "Control what I hear" not "Help users manage their audio environment"
-- **Memorable** — someone should be able to recall the key outcomes from memory after seeing the map once
-- **Solution-agnostic** — the statement survives a total change in implementation. "Always know where things stand" not "Track progress with real-time dashboard." If the label contains a HOW, it's a solution.
+- **Brief, catchy, and provocative** — these are headlines. Think "now you can ____." A good label sticks in someone's head after seeing the map once.
+- **Benefit-focused, never solution-oriented** — describe what's now true for the customer, not what was built. If the label mentions a technology, algorithm, chip, or feature name, it's a solution disguised as an outcome.
+- **Concrete and testable** — you could verify whether this is true. "Block unwanted noise completely" is testable. "Enhanced audio experience" is not.
+- **Direct and confident** — "Control what I hear" not "Help users manage their audio environment"
 
-Bad: "Enhanced noise management capabilities"
-Good: "Control what I hear"
-Bad: "Hearing health feature suite"
-Good: "Protect and improve my hearing"
+The `sub` field then unpacks the headline in plain benefit language — still solution-agnostic. If the label is the movie poster tagline, `sub` is the one-sentence synopsis.
+
+Bad label: "AI-powered noise management" (solution, not outcome)
+Bad label: "Enhanced noise management capabilities" (vague corporate)
+Bad label: "Noise cancellation feature" (feature name)
+Good label: "Control what I hear"
+Good sub: "Block, filter, or enhance any sound in your environment on demand"
+
+Bad label: "Hearing health feature suite" (feature name + corporate)
+Good label: "Protect and improve my hearing"
+Good sub: "Proactively guard against damage and track hearing over time"
 
 For role/personal maps, the same principle applies — shift from activity/territory to outcome:
 
@@ -396,12 +402,19 @@ Every outcome node (root, category, or feature) uses this shape:
   star: true,                        // optional — key differentiator (where you WIN, not just must-have)
   diff: 'diff'|'ts'|'bg'|'unc'|'beh', // competitive position
   conf: 'high'|'medium'|'low',      // outcome confidence
-  label: 'Outcome statement',        // CONCRETE, TESTABLE, DIRECT
-  sub: 'Supporting detail',
+  label: 'Outcome statement',        // brief, catchy, provocative, benefit-focused (see "Writing Strong Outcomes")
+  sub: 'Supporting detail',            // ALWAYS solution-agnostic. Explains the catchy headline in plain language.
+                                       // Good: "Never miss a word, even in noisy environments"
+                                       // Bad: "Uses H2 chip with adaptive filtering" (that's a solution)
+                                       // Bad: "Our noise cancellation feature" (that's a feature name)
   need: 'Customer problem',          // every outcome should have this
   needSev: 3|2|1,                    // 3=severe, 2=moderate, 1=minor
-  biz: ['Business outcome'],         // optional array
+  biz: ['Business outcome'],         // optional array — things NOW TRUE FOR THE BUSINESS (see Common Mistakes #3)
+  bizIndicators: ['Metric or signal'], // optional array — how you'd measure business outcomes (e.g., "NPS > 50", "churn < 5%")
   sol: [{name, tech, eff}],          // optional array — only when concrete solution exists
+  indicators: ['Metric or signal'],  // optional array — how you'd know this outcome is being achieved
+                                     // e.g., "Task completion rate > 90%", "Zero noise complaints in user testing"
+                                     // These are proposed, not commitments — they help teams discuss what "true" means
   detail: {confReason, sources, belief, competitors, notes}  // for detail panel
   // EXPANSION ONLY:
   isExp: true,                       // marks as expansion opportunity node
@@ -456,6 +469,7 @@ Search the available project files or skill directory for example Root Maps. Key
 - `airpods-pro3-root-map*.html` — **Primary data reference.** Complex product with EVS/non-EVS categories, expansion opportunities, full detail panels, star differentiators, Phosphor icons on business outcomes. Best example of field usage and data structure completeness.
 - `peter-lewis-root-map*.html` — **Personal/role map example.** Maps an individual's professional practice as outcomes to ensure. Shows how the framework adapts for people, not products.
 - `root-mapping-meta-root-map*.html` — **Meta example.** Root Map of the Root Mapping framework itself. Demonstrates self-referential use and how to map a framework/methodology.
+- `spotify-root-map*.html` — **Product map example.** Well-known consumer product with star differentiators, EVS/non-EVS categories, competitive landscape, and v4 template features (indicators, interactive add/remove).
 
 ### Source materials
 - Peter Lewis, "Nobody cares about your product." — original framework article (https://medium.com/@thispeterlewis/value-mapping-6203c997c463)

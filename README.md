@@ -56,8 +56,9 @@ The map is a living conversation artifact. Generate it with Claude, then open it
 | File | What it does |
 |------|-------------|
 | `SKILL.md` | Framework instructions — teaches Claude how to think about outcomes, needs, EVS, competitive context, and how to populate the visual template |
-| `root-map-template-v4.html` | Visual template with editing engine — CSS, layout, rendering, detail panels, inline editing, undo/redo, snapshots. Claude replaces only the data section. |
+| `root-map-template-v4.html` | Visual template v4 — CSS, layout engine, rendering, detail panels, interactive add/remove for business outcomes and solutions, star (★) badges, outcome/business indicators, sub-feature support. Claude replaces only the data section. |
 | `airpods-pro3-root-map.html` | Canonical example — a complete Root Map of AirPods Pro 3 showing all features |
+| `spotify-root-map.html` | Canonical example — Spotify product map with star differentiators, EVS/non-EVS, competitive landscape, and v4 features |
 
 ### Then start a conversation
 Try any of these:
@@ -100,6 +101,9 @@ Everything else attaches to outcomes:
 
 ### Personal/Role Map: Peter Lewis
 Maps an individual's professional practice as outcomes to ensure. Shows how the same framework adapts for people — "your role is the outcome you're most directly responsible to ensure."
+
+### Product Map: Spotify
+4 categories (discovery, access, library, social), 10 features, with star differentiators on algorithmic discovery and Spotify Connect. Demonstrates EVS vs. non-EVS branches, confidence variation, and v4 template features including indicators and interactive add/remove.
 
 ### Meta Map: Root Mapping
 Root Map of the Root Mapping framework itself. Useful as both an example and a way to understand the framework's own value proposition.

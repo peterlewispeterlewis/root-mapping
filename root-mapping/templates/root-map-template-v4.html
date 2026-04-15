@@ -1,0 +1,402 @@
+<!--
+  ROOT MAP HTML TEMPLATE v4.0
+  Based on v3.0 with new interactive features:
+  - Star (★) key differentiator badge
+  - Indicators (possible metrics) for outcomes and business outcomes
+  - Add/remove business outcomes and solutions via detail panel
+  - Add child outcome button (creates placeholder child at next tier)
+  - Rebuild function for dynamic updates
+  - Sub-feature support (n-level hierarchy via dynamic RY)
+
+  DATA SECTION: Replace between ===DATA=== markers. Same schema as v3 plus:
+  - star: true               // optional — key differentiator badge
+  - indicators: ['metric']   // optional — how you'd measure this outcome
+  - bizIndicators: ['metric'] // optional — how you'd measure business outcomes
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Root Map — PRODUCT_NAME</title>
+<style>
+:root{--b50:#E6F1FB;--b200:#85B7EB;--b400:#378ADD;--b600:#1660A8;--b800:#0C447C;--a50:#FAEEDA;--a200:#EF9F27;--a600:#7A5B0F;--a800:#573F08;--t50:#E1F5EE;--t200:#5DCAA5;--t600:#0D6650;--t800:#07473A;--r50:#FAECE7;--r200:#F0997B;--r600:#8C3518;--r800:#652710;--g50:#F4F3EF;--g200:#B0AEA6;--g600:#5A5955;--bg:#F9F9F7;--tx:#1E1E1C;--tm:#555552;--tl:#7E7D78;--bd:#DAD8D2;--fn:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;--fnd:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;--hi:#18865F;--mi:#B07E0B;--lo:#B33434;--neu:#8A8983;--cbg:rgba(0,0,0,.02);--cbd:rgba(0,0,0,.065);--arr:#B8B7B2;--arrd:#CDCCC8;--e50:#EEEDFE;--e200:#AFA9EC;--e400:#7F77DD;--e600:#534AB7;--e800:#3C3489}
+@media(prefers-color-scheme:dark){:root{--b50:#0B2F4D;--b200:#1A6AAF;--b400:#3D92E0;--b600:#8FC3F0;--b800:#C5DFF7;--a50:#3F2504;--a200:#C57E1A;--a600:#F0A52A;--a800:#F7CB7D;--t50:#062F28;--t200:#1FA87A;--t600:#62CEAA;--t800:#A4E3CE;--r50:#3E1810;--r200:#C4522C;--r600:#EF9E7E;--r800:#F5C7B6;--g50:#252523;--g200:#58585A;--g600:#B0AEA8;--bg:#161614;--tx:#E4E2DA;--tm:#A8A6A0;--tl:#807E78;--bd:#363634;--cbg:rgba(255,255,255,.025);--cbd:rgba(255,255,255,.07);--arr:#706E68;--arrd:#504F4A;--hi:#2CB882;--mi:#D4940E;--lo:#E85858;--neu:#807E78;--e50:#1E1A40;--e200:#6A62C4;--e400:#8B83E0;--e600:#B3A4ED;--e800:#D5CFFA}}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--tx);font-family:var(--fn);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
+#bar{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd);padding:10px 20px;display:flex;align-items:center;gap:16px}#bar h1{font-family:var(--fnd);font-size:15px;font-weight:600;letter-spacing:-.02em}#bar .sub{color:var(--tl);font-size:11px;margin-top:1px}.sep{width:1px;height:20px;background:var(--bd)}.leg{display:flex;gap:12px;font-size:10px;color:var(--tm);align-items:center;flex-wrap:wrap}.li{display:flex;align-items:center;gap:4px}.zc{margin-left:auto;display:flex;gap:4px}.zc button{width:28px;height:28px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+#cc{position:absolute;top:48px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab}#cc:active{cursor:grabbing}#cv{position:absolute;transform-origin:0 0}
+.ng{position:absolute;background:var(--cbg);border:1px solid var(--cbd);border-radius:12px;padding:6px;cursor:pointer;transition:transform .15s,box-shadow .15s}.ng:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.07);z-index:10}
+.ng.selected{background:#fff;border-color:var(--bd);box-shadow:0 4px 20px rgba(0,0,0,.1);z-index:11}
+@media(prefers-color-scheme:dark){.ng.selected{background:#1E1E1C;border-color:var(--bd)}}
+.ng.is-exp{background:color-mix(in srgb,var(--e50) 40%,transparent);border:2px dashed var(--e400);border-radius:14px}
+.c-need{border-radius:6px;padding:5px 8px;font-size:8px;line-height:1.35;background:var(--r50);border:1px solid var(--r200);color:var(--r800);margin-bottom:4px}.sev{display:flex;align-items:center;gap:2px;margin-bottom:3px;font-size:7px;font-weight:600;color:var(--r600)}.sd{width:4px;height:4px;border-radius:50%;background:var(--r200);opacity:.2;display:inline-block}.sd.on{opacity:1}.s3 .sd.on{background:var(--lo)}.s2 .sd.on{background:var(--mi)}.s1 .sd.on{background:var(--neu)}
+.c-out{border-radius:8px;padding:10px 12px 8px;background:var(--b50);border:2px solid var(--b400);position:relative;margin-bottom:4px}.c-out.is-root{border-width:3px;padding:12px 14px 10px}.c-out.non-evs{border-style:dashed;border-color:var(--b200);opacity:.78}.c-out .ol{font-family:var(--fnd);font-size:12px;font-weight:600;color:var(--b800);line-height:1.25;letter-spacing:-.01em;padding-right:20px}.c-out.is-root .ol{font-size:15px}.c-out .os{font-size:9px;color:var(--b600);margin-top:3px;line-height:1.3}
+.c-out.is-exp{background:var(--e50);border:2px dashed var(--e400)}.c-out.is-exp .ol{color:var(--e800)}.c-out.is-exp .os{color:var(--e600)}
+.evs{font-size:6px;font-weight:700;padding:2px 4px;border-radius:3px;background:var(--b400);color:#fff;margin-left:3px;letter-spacing:.04em;vertical-align:2px}
+.star-badge{font-size:8px;color:#C8940A;margin-left:3px;vertical-align:1px}
+@media(prefers-color-scheme:dark){.star-badge{color:#E8B84A}}
+.exp-badge{font-size:6px;font-weight:700;padding:2px 4px;border-radius:3px;background:var(--e400);color:#fff;margin-left:3px;letter-spacing:.04em;vertical-align:2px}
+.lev-badge{font-size:7px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:3px}.lev-hi{background:#E1F5EE;color:#0A5C43}.lev-mi{background:#FFF3DB;color:#6B4E00}
+@media(prefers-color-scheme:dark){.lev-hi{background:#0A3B30;color:#72D4AB}.lev-mi{background:#3D2800;color:#D4940E}}
+.dtag{font-size:7px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:3px}.dd{background:#E1F5EE;color:#0A5C43}.dts{background:var(--g50);color:var(--tm)}.dbg{background:#FFF3DB;color:#6B4E00}.du{background:#EDE9FE;color:#4E3D9E}.dbh{background:#FEE9E9;color:#7A1D1D}
+@media(prefers-color-scheme:dark){.dd{background:#0A3B30;color:#72D4AB}.dts{background:var(--g50);color:var(--tm)}.dbg{background:#3D2800;color:#D4940E}.du{background:#2A2060;color:#B3A4ED}.dbh{background:#401515;color:#F09595}.evs{background:var(--b400)}.exp-badge{background:var(--e400)}}
+.cbg{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%}
+.c-biz{border-radius:5px;padding:4px 8px;font-size:8px;line-height:1.3;background:var(--a50);border:1px solid var(--a200);color:var(--a800);margin-bottom:2px}.c-sol{border-radius:5px;padding:4px 8px;font-size:8px;line-height:1.3;background:var(--t50);border:1px solid var(--t200);color:var(--t800);margin-bottom:2px;position:relative}.c-sol .sn{font-weight:600;font-size:9px}.c-sol .st{font-size:7px;opacity:.55;margin-top:1px}.eff{position:absolute;top:4px;right:5px;width:6px;height:6px;border-radius:50%}
+#dp{position:fixed;right:-420px;top:48px;bottom:0;width:400px;background:#fff;border-left:1px solid var(--bd);z-index:200;transition:right .3s cubic-bezier(.4,0,.2,1);overflow-y:auto}#dp.open{right:0}.dp-i{padding:32px 28px 48px}.xb{position:sticky;top:0;float:right;margin:12px 12px 0 0;width:28px;height:28px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tm);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10}
+.dp-tag{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--tl);margin-bottom:10px}.dp-tag.is-exp{color:var(--e600)}.dp-h{font-family:var(--fnd);font-size:22px;font-weight:600;letter-spacing:-.025em;line-height:1.2;color:var(--b800);margin-bottom:6px}.dp-h.is-exp{color:var(--e800)}.dp-sub{font-size:13px;color:var(--tm);line-height:1.45;margin-bottom:20px}
+.ind-strip{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:24px}.ind-label{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tl);margin-bottom:4px}.ind-val{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}.ind-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.ds{margin-bottom:24px}.ds-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tl);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--bd)}.ds p{font-size:13px;line-height:1.6;color:var(--tx)}.ds .mu{color:var(--tm);font-size:12px;line-height:1.55}
+sup.fn{font-size:9px;color:var(--b600);cursor:help;font-weight:600;vertical-align:super;margin-left:1px;border-bottom:1px dotted var(--b200)}
+.comp-table{width:100%;border-collapse:collapse;font-size:12px}.comp-table td{padding:8px 0;border-bottom:1px solid var(--bd);vertical-align:top}.comp-table tr:last-child td{border-bottom:none}.comp-table .cn{font-weight:600;width:100px;color:var(--tx);padding-right:12px}.comp-table .cd{color:var(--tm)}
+.dsol{padding:12px 0;border-bottom:1px solid var(--bd)}.dsol:last-child{border-bottom:none}.dsol-name{font-size:13px;font-weight:600;color:var(--t800);margin-bottom:4px}.dsol-eff{font-size:12px;display:flex;align-items:center;gap:6px;margin-bottom:4px}.dsol-tech{font-size:11px;color:var(--tm);line-height:1.45;padding-left:14px;border-left:2px solid var(--t200)}
+.src-box{background:var(--g50);border-radius:8px;padding:14px 16px;margin-top:24px}.src-box .ds-label{border-bottom:none;padding-bottom:0;margin-bottom:6px}.src-item{font-size:11px;color:var(--tm);line-height:1.5;padding:3px 0 3px 20px;position:relative}.src-item::before{content:attr(data-n);position:absolute;left:0;font-size:9px;font-weight:600;color:var(--b600)}
+.note-box{background:var(--a50);border-left:3px solid var(--a200);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:20px;font-size:12px;line-height:1.55;color:var(--a800)}
+.exp-note-box{background:var(--e50);border-left:3px solid var(--e400);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:20px;font-size:12px;line-height:1.55;color:var(--e800)}
+.user-notes{margin-top:28px;border-top:1px solid var(--bd);padding-top:20px}.user-notes textarea{width:100%;min-height:80px;border:1px solid var(--bd);border-radius:8px;padding:10px 12px;font-family:var(--fn);font-size:12px;color:var(--tx);background:var(--bg);resize:vertical;line-height:1.5}.user-notes textarea:focus{outline:none;border-color:var(--b400)}.user-notes textarea::placeholder{color:var(--tl)}.user-notes .sh{font-size:10px;color:var(--tl);margin-top:4px}
+svg.arrows{position:absolute;top:0;left:0;pointer-events:none}
+/* v4 additions */
+.ind-list{margin-top:6px}.ind-item{font-size:12px;color:var(--tm);padding:3px 0 3px 14px;position:relative;line-height:1.5}.ind-item::before{content:'';position:absolute;left:0;top:10px;width:5px;height:5px;border-radius:50%;background:var(--bd)}
+.dp-add{font-size:11px;color:var(--b600);cursor:pointer;padding:6px 0;display:inline-flex;align-items:center;gap:4px;border:none;background:none;font-family:var(--fn)}.dp-add:hover{color:var(--b800);text-decoration:underline}
+.dp-rm{font-size:9px;color:var(--tl);cursor:pointer;border:none;background:none;padding:2px 4px;border-radius:3px;float:right;opacity:.4;font-family:var(--fn)}.dp-rm:hover{opacity:1;color:var(--lo);background:var(--r50)}
+.dp-biz-item,.dp-sol-item{position:relative;padding-right:24px}
+.dp-act-bar{margin-top:16px;padding-top:16px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:4px}
+@media(prefers-color-scheme:dark){#dp{background:#161614}.dp-add{color:var(--b400)}.dp-add:hover{color:var(--b600)}}
+</style>
+</head>
+<body>
+<div id="bar"><div><h1>PRODUCT_NAME — Root Map</h1><div class="sub">Inferred product decision logic</div></div><div class="sep"></div><div class="leg"><div class="li"><svg width="9" height="9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="var(--r200)" stroke-width="1"/></svg>Need</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--b50)" stroke="var(--b400)" stroke-width="1.5"/></svg>Outcome</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--a50)" stroke="var(--a200)" stroke-width="1"/></svg>Business</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--t50)" stroke="var(--t200)" stroke-width="1"/></svg>Solution</div><div class="sep" style="height:14px"></div><div class="li"><svg width="7" height="7"><circle cx="3.5" cy="3.5" r="3" fill="var(--hi)"/></svg>High</div><div class="li"><svg width="7" height="7"><circle cx="3.5" cy="3.5" r="3" fill="var(--mi)"/></svg>Med</div><div class="li"><svg width="7" height="7"><circle cx="3.5" cy="3.5" r="3" fill="var(--lo)"/></svg>Low</div></div><div class="zc"><button onclick="zi()">+</button><button onclick="zo()">−</button><button onclick="rv()">⟲</button></div></div>
+<div id="cc"><div id="cv"></div></div>
+<div id="dp"><button class="xb" onclick="hp()">✕</button><div class="dp-i" id="dc"></div></div>
+<script>
+/* ============================================================
+   LAYOUT ENGINE v4.0
+   Zone-based positioning, rendering, arrows, detail panel
+   Supports dynamic rebuild, sub-features, add/remove
+   ============================================================ */
+const NW=230,NG=35,BASE_RY=[50,620,1040];
+const CC={high:'var(--hi)',medium:'var(--mi)',low:'var(--lo)'};
+const LC={high:'var(--hi)',medium:'var(--mi)'};
+const dC={diff:'dd',ts:'dts',bg:'dbg',unc:'du',beh:'dbh'};
+const dL={diff:'differentiated',ts:'table stakes',bg:'battleground',unc:'uncontested',beh:'behind'};
+
+/* ============================================================
+   ===DATA=== REPLACE EVERYTHING BELOW THIS LINE PER PRODUCT
+   ============================================================ */
+
+
+let catCh = {
+  'c-example': ['f-ex1', 'f-ex2'],
+};
+
+let catOrd = ['c-example'];
+
+const O = [
+  // ROOT — always first, always root:true
+  {id:'root', root:true, evs:true, conf:'high',
+    label:'Root outcome goes here',
+    sub:'The top-level customer outcome — what will be true if this product succeeds?',
+    need:'The core customer problem this product addresses',
+    needSev:3,
+    biz:['Primary business outcome'],
+    bizIndicators:['Key business metric'],
+    sol:[{name:'PRODUCT_NAME', tech:'The product itself is the root-level solution', eff:'strong'}],
+    indicators:['Key outcome metric'],
+    detail:{confReason:'Why the team believes this is the right root outcome.<sup class="fn" title="Source">1</sup>',
+      sources:['1. Primary source or research'],
+      belief:'The team\'s core conviction about why this matters.',
+      competitors:[{n:'Competitor A',d:'How they address the same space'},{n:'Competitor B',d:'Different approach to the same problem'}],
+      notes:'PLACEHOLDER — replace with actual product root outcome'}},
+
+  // CATEGORY — one per major outcome branch
+  {id:'c-example', evs:true, diff:'bg', conf:'medium',
+    label:'Category outcome statement',
+    sub:'What must be true within this branch for the root to succeed?',
+    need:'The specific customer problem this branch addresses',
+    needSev:2,
+    biz:['Business outcome this branch produces'],
+    sol:[{name:'Feature suite or capability',tech:'Key technical approach',eff:'adequate'}],
+    indicators:['How you\'d measure this outcome'],
+    detail:{confReason:'Why this confidence level for this branch.',
+      sources:['Research or evidence'],
+      belief:'Team belief about this branch\'s importance.',
+      competitors:[{n:'Alternative',d:'How competitors address this'}],
+      notes:'PLACEHOLDER — replace with actual category outcome'}},
+];
+
+const F = [
+  // FEATURES — child outcomes within categories
+  {id:'f-ex1', parent:'c-example', idx:0, evs:true, conf:'medium',
+    label:'Feature outcome 1',
+    sub:'Specific outcome this feature enables',
+    need:'Specific user problem',
+    needSev:2,
+    sol:[{name:'Solution name',tech:'Technical approach',eff:'adequate'}],
+    detail:{confReason:'Evidence for this feature outcome.',
+      notes:'PLACEHOLDER — replace with actual feature outcome'}},
+
+  {id:'f-ex2', parent:'c-example', idx:1, evs:true, conf:'low',
+    label:'? Feature outcome 2 — needs articulation',
+    sub:'What will be true for users?',
+    need:'? What problem does this solve?',
+    needSev:1,
+    detail:{notes:'PLACEHOLDER — needs team input to articulate this outcome'}},
+];
+
+   ===END DATA=== DO NOT MODIFY BELOW THIS LINE
+   ============================================================ */
+
+// State
+const userNotes={};
+let nodeEls={}, allN=[], edges=[], zones={}, TW=0, RY=[...BASE_RY];
+let bbL,bbT,bbR,bbB,mapW,mapH;
+let selectedNodeId=null;
+let s,px,py;
+let nodeCounter=9000;
+const cv=document.getElementById('cv');
+const cont=document.getElementById('cc');
+const PAD=60;
+
+// Create SVG once
+const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+svg.setAttribute('class','arrows');
+svg.innerHTML='<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1.5L8 5L2 8.5" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+cv.appendChild(svg);
+
+function computeLayout(){
+  zones={};allN=[];edges=[];RY=[...BASE_RY];
+  // Detect sub-features (features whose parent is a feature, not a category)
+  const subCh={};
+  F.forEach(f=>{if(f.parent && !catCh[f.parent]){subCh[f.parent]=subCh[f.parent]||[];if(!subCh[f.parent].includes(f.id))subCh[f.parent].push(f.id);}});
+  if(Object.keys(subCh).length>0)RY.push(RY[2]+420);
+
+  // Compute zones
+  let xC=40;
+  catOrd.forEach(c=>{const n=(catCh[c]||[]).length;const zw=Math.max(NW+12,n*(NW+NG)-NG+12);zones[c]={x:xC,w:zw,cx:xC+zw/2,ch:catCh[c]||[]};xC+=zw+NG+15;});
+  TW=xC+40;
+
+  // Position root
+  const fZ=zones[catOrd[0]],lZ=zones[catOrd[catOrd.length-1]];
+  const mid=(fZ.x+lZ.x+lZ.w)/2;
+  O[0].x=mid-140;O[0].y=RY[0];O[0].w=280;
+
+  // Position categories
+  O.forEach(o=>{if(o.root)return;if(zones[o.id]){o.x=zones[o.id].cx-NW/2;o.y=RY[1];o.w=NW;}});
+
+  // Position features
+  F.forEach(f=>{const z=zones[f.parent];if(!z)return;// skip sub-features
+    const ch=z.ch;const n=ch.length;const tw=n*NW+(n-1)*NG;const sx=z.x+(z.w-tw)/2;
+    const idx=ch.indexOf(f.id);if(idx<0)return;f.x=sx+idx*(NW+NG);f.y=RY[2];f.w=NW;});
+
+  // Position sub-features
+  F.forEach(f=>{if(!f.parent||catCh[f.parent])return;
+    const pn=[...O,...F].find(n=>n.id===f.parent);if(!pn||!pn.x)return;
+    const sibs=subCh[f.parent]||[];const n=sibs.length;const tw=n*NW+(n-1)*NG;
+    const sx=pn.x+(pn.w||NW)/2-tw/2;const idx=sibs.indexOf(f.id);
+    f.x=sx+idx*(NW+NG);f.y=RY[3]||RY[2]+420;f.w=NW;});
+
+  // Build node + edge lists
+  allN=[...O,...F];
+  edges=[];
+  catOrd.forEach(c=>{edges.push([c,'root']);(catCh[c]||[]).forEach(fid=>{edges.push([fid,c]);const sf=subCh[fid];if(sf)sf.forEach(sfid=>edges.push([sfid,fid]));});});
+
+  // Bounding box
+  bbL=Infinity;bbT=Infinity;bbR=-Infinity;bbB=-Infinity;
+  allN.forEach(n=>{if(n.x==null)return;bbL=Math.min(bbL,n.x);bbT=Math.min(bbT,n.y);bbR=Math.max(bbR,n.x+(n.w||NW));bbB=Math.max(bbB,n.y+400);});
+  mapW=bbR-bbL;mapH=bbB-bbT;
+}
+
+function sevH(n){n=n||2;const c=n>=3?'s3':n>=2?'s2':'s1';const l=n>=3?'severe':n>=2?'moderate':'minor';let d='';for(let i=1;i<=3;i++)d+='<span class="sd'+(i<=n?' on':'')+'"></span>';return'<div class="sev '+c+'">'+d+' '+l+'</div>';}
+
+function renderAll(){
+  // Clear existing nodes
+  cv.querySelectorAll('.ng').forEach(el=>el.remove());
+  nodeEls={};
+  cv.style.width=TW+'px';cv.style.height=(RY[RY.length-1]+900)+'px';
+  svg.setAttribute('width',TW);svg.setAttribute('height',RY[RY.length-1]+900);
+
+  allN.forEach(o=>{
+    const g=document.createElement('div');const isE=o.isExp;
+    g.className='ng'+(isE?' is-exp':'');if(o.id===selectedNodeId)g.classList.add('selected');
+    g.style.left=o.x+'px';g.style.top=o.y+'px';g.style.width=(o.w||NW)+'px';
+    let h='';
+    if(o.need)h+='<div class="c-need">'+sevH(o.needSev)+o.need+'</div>';
+    if(isE){
+      const levClass=o.leverage==='high'?'lev-hi':'lev-mi';const levLabel=o.leverage==='high'?'high leverage':'medium leverage';
+      h+='<div class="c-out is-exp'+(o.root?' is-root':'')+'">';
+      if(o.leverage)h+='<div class="cbg" style="background:'+LC[o.leverage]+'" title="'+o.leverage+' leverage"></div>';
+      h+='<div class="ol">'+o.label+'<span class="exp-badge">OPPORTUNITY</span></div>';
+      if(o.sub)h+='<div class="os">'+o.sub+'</div>';
+      h+='<div class="lev-badge '+levClass+'">'+levLabel+'</div></div>';
+    } else {
+      const et=o.evs?'<span class="evs">EVS</span>':'';
+      const starB=o.star?'<span class="star-badge">★</span>':'';
+      const dt=o.diff?'<div class="dtag '+dC[o.diff]+'">'+dL[o.diff]+'</div>':'';
+      h+='<div class="c-out'+(o.root?' is-root':'')+(o.evs===false?' non-evs':'')+'">';
+      if(o.conf)h+='<div class="cbg" style="background:'+CC[o.conf]+'" title="'+o.conf+' confidence"></div>';
+      h+='<div class="ol">'+o.label+et+starB+'</div>';
+      if(o.sub)h+='<div class="os">'+o.sub+'</div>';h+=dt+'</div>';
+    }
+    if(o.biz)o.biz.forEach(b=>{h+='<div class="c-biz">'+b+'</div>';});
+    if(o.sol)o.sol.forEach(s=>{h+='<div class="c-sol">';if(s.eff)h+='<div class="eff" style="background:'+(s.eff==='strong'?'var(--hi)':s.eff==='adequate'?'var(--mi)':'var(--neu)')+'" title="'+s.eff+'"></div>';h+='<div style="padding-right:14px"><div class="sn">'+s.name+'</div><div class="st">'+s.tech+'</div></div></div>';});
+    g.innerHTML=h;g.onclick=e=>{e.stopPropagation();sp(o)};cv.appendChild(g);nodeEls[o.id]={el:g,data:o};
+  });
+}
+
+const evsMap={};
+function drawE(){
+  svg.querySelectorAll('.edge').forEach(e=>e.remove());
+  allN.forEach(n=>{evsMap[n.id]=n.evs});
+  edges.forEach(([f,t])=>{
+    const fi=nodeEls[f],ti=nodeEls[t];if(!fi||!ti)return;
+    const fe=fi.el,te=ti.el;
+    const x1=parseFloat(fe.style.left)+fe.offsetWidth/2,y1=parseFloat(fe.style.top)-1;
+    const x2=parseFloat(te.style.left)+te.offsetWidth/2,y2=parseFloat(te.style.top)+te.offsetHeight+1;
+    const src=fi.data;const isE=src?.isExp;const ne=!isE&&evsMap[f]===false;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const my=(y1+y2)/2;p.setAttribute('d','M'+x1+','+y1+' C'+x1+','+my+' '+x2+','+my+' '+x2+','+y2);
+    p.setAttribute('fill','none');p.setAttribute('class','edge');
+    if(isE){p.setAttribute('stroke','var(--e400)');p.setAttribute('stroke-width','2');p.setAttribute('stroke-dasharray','10 6');}
+    else{p.setAttribute('stroke',ne?'var(--arrd)':'var(--arr)');p.setAttribute('stroke-width',ne?'1.2':'1.8');if(ne)p.setAttribute('stroke-dasharray','8 5');}
+    p.setAttribute('marker-end','url(#a)');svg.appendChild(p);
+  });
+}
+
+// Detail panel
+function sp(o){
+  selectedNodeId=o.id;
+  // Update selected state on nodes
+  Object.values(nodeEls).forEach(v=>v.el.classList.remove('selected'));
+  if(nodeEls[o.id])nodeEls[o.id].el.classList.add('selected');
+
+  const d=o.detail||{};const p=document.getElementById('dp'),c=document.getElementById('dc');
+  const isE=o.isExp;const conf=o.conf||'medium';const sn=o.needSev||2;
+  const sevLbl=sn>=3?'Severe':sn>=2?'Moderate':'Minor';
+  const sevSub=sn>=3?'Strong motivation to solve':sn>=2?'Real problem, workarounds exist':'Mild inconvenience';
+  const starText=o.star?' · ★ key differentiator':'';
+  const tagClass=isE?' is-exp':'';const hClass=isE?' is-exp':'';
+  const tagText=isE?'Expansion opportunity'+(o.leverage?' · '+o.leverage+' leverage':''):'Experience outcome'+(o.evs?' · EVS':'')+(o.diff?' · '+dL[o.diff]:'')+starText;
+  const indLabel1=isE?'Strategic leverage':'Outcome confidence';const indVal1=isE?o.leverage:conf;const indColor1=isE?LC[o.leverage]:CC[conf];
+
+  // Competitors
+  let compH='';if(d.competitors?.length){compH='<div class="ds"><div class="ds-label">Competitive landscape</div><table class="comp-table">'+d.competitors.map(c=>'<tr><td class="cn">'+c.n+'</td><td class="cd">'+c.d+'</td></tr>').join('')+'</table></div>';}
+
+  // Solutions with remove buttons
+  let solH='';if(o.sol?.length){solH='<div class="ds"><div class="ds-label">Solutions &amp; effectiveness</div>'+o.sol.map((s,i)=>{const ec=s.eff||'unproven';const ecolor=ec==='strong'?'var(--hi)':ec==='adequate'?'var(--mi)':'var(--neu)';const elbl=ec==='strong'?'Strong — effectively produces outcome':ec==='adequate'?'Adequate — functional, room to improve':'Unproven — not yet validated';return'<div class="dsol dp-sol-item"><button class="dp-rm" onclick="removeSol(\''+o.id+'\','+i+')" title="Remove solution">✕</button><div class="dsol-name">'+s.name+'</div><div class="dsol-eff"><span class="ind-dot" style="background:'+ecolor+'"></span><span>'+elbl+'</span></div><div class="dsol-tech">'+s.tech+'</div></div>';}).join('')+'<button class="dp-add" onclick="addSol(\''+o.id+'\')">+ Add solution</button></div>';}
+  else{solH='<div class="ds"><div class="ds-label">Solutions &amp; effectiveness</div><p class="mu">No solutions attached</p><button class="dp-add" onclick="addSol(\''+o.id+'\')">+ Add solution</button></div>';}
+
+  // Business outcomes with remove buttons
+  let bizH='';if(o.biz?.length){bizH='<div class="ds"><div class="ds-label">Business outcomes</div>'+o.biz.map((b,i)=>'<div class="dp-biz-item"><button class="dp-rm" onclick="removeBiz(\''+o.id+'\','+i+')" title="Remove business outcome">✕</button><p style="margin-bottom:6px">'+b+'</p></div>').join('')+'<button class="dp-add" onclick="addBiz(\''+o.id+'\')">+ Add business outcome</button></div>';}
+  else{bizH='<div class="ds"><div class="ds-label">Business outcomes</div><p class="mu">No business outcomes attached</p><button class="dp-add" onclick="addBiz(\''+o.id+'\')">+ Add business outcome</button></div>';}
+
+  // Indicators (NEW)
+  let indH='';if(o.indicators?.length){indH='<div class="ds"><div class="ds-label">Possible outcome indicators</div><div class="ind-list">'+o.indicators.map(i=>'<div class="ind-item">'+i+'</div>').join('')+'</div></div>';}
+
+  // Business indicators (NEW)
+  let biH='';if(o.bizIndicators?.length){biH='<div class="ds"><div class="ds-label">Business outcome indicators</div><div class="ind-list">'+o.bizIndicators.map(i=>'<div class="ind-item">'+i+'</div>').join('')+'</div></div>';}
+
+  // Sources
+  let srcH='';if(d.sources?.length){srcH='<div class="src-box"><div class="ds-label">Sources</div>'+d.sources.map((s,i)=>'<div class="src-item" data-n="'+(i+1)+'.">'+s+'</div>').join('')+'</div>';}
+
+  const en=userNotes[o.id]||'';
+  c.innerHTML=
+    '<div class="dp-tag'+tagClass+'">'+tagText+'</div>'+
+    '<div class="dp-h'+hClass+'">'+o.label+'</div>'+
+    (o.sub?'<div class="dp-sub">'+o.sub+'</div>':'')+
+    '<div class="ind-strip"><div><div class="ind-label">'+indLabel1+'</div><div class="ind-val"><span class="ind-dot" style="background:'+indColor1+'"></span>'+indVal1+'</div></div><div><div class="ind-label">Need severity</div><div class="ind-val"><span class="ind-dot" style="background:'+(sn>=3?'var(--lo)':sn>=2?'var(--mi)':'var(--neu)')+'"></span>'+sevLbl+'</div></div></div>'+
+    (d.confReason?'<div class="ds"><div class="ds-label">'+(isE?'Evidence & rationale':'Why this confidence level?')+'</div><p class="mu">'+d.confReason+'</p></div>':'')+
+    (o.need?'<div class="ds"><div class="ds-label">Problem addressed</div><p>'+o.need+'</p><p class="mu" style="margin-top:6px">'+sevLbl+' — '+sevSub+'</p></div>':'')+
+    (d.belief?'<div class="ds"><div class="ds-label">'+(isE?'Strategic thesis':'Team belief')+'</div><p>'+d.belief+'</p></div>':'')+
+    compH+indH+bizH+biH+solH+srcH+
+    (d.notes?'<div class="'+(isE?'exp-note-box':'note-box')+'">'+d.notes+'</div>':'')+
+    '<div class="dp-act-bar"><button class="dp-add" onclick="addChild(\''+o.id+'\')">+ Add child outcome</button></div>'+
+    '<div class="user-notes"><div class="ds-label">Your notes &amp; evidence</div><textarea id="un-'+o.id+'" placeholder="'+(isE?'Strategic assessment, risks, dependencies...':'Add context, links to research, questions for the team...')+'">'+en+'</textarea><div class="sh">Saved for this session · paste links, data, or questions</div></div>';
+  const ta=c.querySelector('textarea');if(ta)ta.addEventListener('input',function(){userNotes[o.id]=this.value;});
+  p.classList.add('open');
+}
+
+function hp(){selectedNodeId=null;Object.values(nodeEls).forEach(v=>v.el.classList.remove('selected'));document.getElementById('dp').classList.remove('open')}
+
+// === ADD / REMOVE HANDLERS ===
+function findNode(id){return [...O,...F].find(n=>n.id===id);}
+
+function addBiz(nodeId){
+  const txt=prompt('Business outcome (what\'s now true for the business):');
+  if(!txt)return;const n=findNode(nodeId);if(!n)return;
+  if(!n.biz)n.biz=[];n.biz.push(txt);rebuild();sp(n);
+}
+function removeBiz(nodeId,idx){
+  const n=findNode(nodeId);if(!n||!n.biz)return;
+  if(!confirm('Remove business outcome: "'+n.biz[idx]+'"?'))return;
+  n.biz.splice(idx,1);if(n.biz.length===0)delete n.biz;rebuild();sp(n);
+}
+function addSol(nodeId){
+  const name=prompt('Solution name:');if(!name)return;
+  const tech=prompt('Technical approach / requirements:')||'';
+  const n=findNode(nodeId);if(!n)return;
+  if(!n.sol)n.sol=[];n.sol.push({name,tech,eff:'unproven'});rebuild();sp(n);
+}
+function removeSol(nodeId,idx){
+  const n=findNode(nodeId);if(!n||!n.sol)return;
+  if(!confirm('Remove solution: "'+n.sol[idx].name+'"?'))return;
+  n.sol.splice(idx,1);if(n.sol.length===0)delete n.sol;rebuild();sp(n);
+}
+
+function addChild(parentId){
+  const parent=findNode(parentId);if(!parent)return;
+  const label=prompt('Child outcome (brief, catchy, benefit-focused — "now you can ___"):');
+  if(!label)return;
+  const newId='f-new-'+(nodeCounter++);
+
+  if(parent.root){
+    // Add as new category
+    const catId='c-new-'+(nodeCounter++);
+    O.push({id:catId,evs:false,conf:'low',label:label,sub:'? Needs articulation',need:'? What customer problem does this address?',needSev:1,detail:{notes:'PLACEHOLDER — added via map. Needs team input.'}});
+    catCh[catId]=[];catOrd.push(catId);
+  } else if(catCh[parentId]){
+    // Parent is a category — add as feature
+    F.push({id:newId,parent:parentId,idx:(catCh[parentId]||[]).length,evs:false,conf:'low',label:label,sub:'? Needs articulation',need:'? What customer problem does this address?',needSev:1,detail:{notes:'PLACEHOLDER — added via map. Needs team input.'}});
+    catCh[parentId].push(newId);
+  } else {
+    // Parent is a feature — add as sub-feature
+    F.push({id:newId,parent:parentId,idx:0,evs:false,conf:'low',label:label,sub:'? Needs articulation',need:'? What customer problem does this address?',needSev:1,detail:{notes:'PLACEHOLDER — added as sub-feature via map. Needs team input.'}});
+  }
+  rebuild();
+}
+
+// === REBUILD ===
+function rebuild(){
+  computeLayout();renderAll();
+  setTimeout(()=>{drawE();if(selectedNodeId){const n=findNode(selectedNodeId);if(n)sp(n);}},100);
+}
+
+// === PAN + ZOOM ===
+function fitView(){
+  const vw=cont.clientWidth,vh=cont.clientHeight;
+  const sx=(vw-PAD*2)/mapW,sy=(vh-PAD*2)/mapH;
+  s=Math.min(sx,sy,1.5);px=(vw-mapW*s)/2-bbL*s;py=(vh-mapH*s)/2-bbT*s;
+}
+function ap(){cv.style.transform='translate('+px+'px,'+py+'px) scale('+s+')'}
+
+let dr=false,dsx,dsy;
+cont.addEventListener('mousedown',e=>{if(e.target.closest('.ng'))return;dr=true;dsx=e.clientX-px;dsy=e.clientY-py});
+window.addEventListener('mousemove',e=>{if(!dr)return;px=e.clientX-dsx;py=e.clientY-dsy;ap()});
+window.addEventListener('mouseup',()=>dr=false);
+cont.addEventListener('wheel',e=>{e.preventDefault();const olds=s;s=Math.max(.05,Math.min(2,s*(e.deltaY>0?.98:1.02)));const r=s/olds;const rect=cont.getBoundingClientRect();const cx=e.clientX-rect.left,cy=e.clientY-rect.top;px=cx-r*(cx-px);py=cy-r*(cy-py);ap()},{passive:false});
+function zi(){const olds=s;s=Math.min(2,s*1.08);const r=s/olds;const vw=cont.clientWidth/2,vh=cont.clientHeight/2;px=vw-r*(vw-px);py=vh-r*(vh-py);ap()}
+function zo(){const olds=s;s=Math.max(.05,s*.92);const r=s/olds;const vw=cont.clientWidth/2,vh=cont.clientHeight/2;px=vw-r*(vw-px);py=vh-r*(vh-py);ap()}
+function rv(){fitView();ap()}
+cv.addEventListener('click',e=>{if(!e.target.closest('.ng'))hp()});
+window.addEventListener('resize',()=>{fitView();ap();setTimeout(drawE,100)});
+
+// Touch support for mobile pan
+let touchStart=null;
+cont.addEventListener('touchstart',e=>{if(e.target.closest('.ng'))return;if(e.touches.length===1){touchStart={x:e.touches[0].clientX-px,y:e.touches[0].clientY-py};}},{passive:true});
+cont.addEventListener('touchmove',e=>{if(!touchStart||e.touches.length!==1)return;e.preventDefault();px=e.touches[0].clientX-touchStart.x;py=e.touches[0].clientY-touchStart.y;ap()},{passive:false});
+cont.addEventListener('touchend',()=>{touchStart=null});
+
+// === INITIAL BUILD ===
+computeLayout();renderAll();fitView();ap();
+setTimeout(drawE,500);
+</script>
+</body>
+</html>
