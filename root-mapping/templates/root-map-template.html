@@ -25,12 +25,15 @@
     sub: 'Supporting detail',       // clarifying subtitle
     need: 'Customer problem',       // the pain point this addresses
     needSev: 3|2|1,                 // need severity: 3=severe, 2=moderate, 1=minor
+    star: true,                     // optional — key differentiator (where you WIN)
     biz: ['Business outcome 1'],    // business outcomes (optional array)
+    bizIndicators: ['metric'],      // optional — how you'd measure business outcomes
     sol: [{                         // solutions (optional array)
       name: 'Solution name',
       tech: 'Technical requirements',
       eff: 'strong'|'adequate'|'unproven'
     }],
+    indicators: ['metric'],         // optional — how you'd measure this outcome
     detail: {                       // click-through detail (optional but recommended)
       confReason: 'Why this confidence...<sup class="fn" title="Source">1</sup>',
       sources: ['1. Source description'],
@@ -383,10 +386,10 @@ if(o.isExp){
 }
 if(o.biz)o.biz.forEach(b=>{h+='<div class="c-biz">'+b+'</div>';});
 if(o.sol)o.sol.forEach(s=>{h+='<div class="c-sol">';if(s.eff)h+=dots(CL[s.eff]||1);h+='<div style="padding-right:14px"><div class="sn">'+s.name+'</div><div class="st">'+s.tech+'</div></div></div>';});
-// Add-child button for root (→ category) and categories (→ feature)
+// Add-child button: root→category, category→feature, feature→sub-feature
 if(o.root){h+='<div class="ng-add" onclick="event.stopPropagation();wsAddCategory()" title="Add outcome branch">+</div>';}
 else if(!o.parent&&!o.isExp){h+='<div class="ng-add" onclick="event.stopPropagation();wsAddNode(\''+o.id+'\')" title="Add feature outcome">+</div>';}
-else if(o.parent){h+='<div class="ng-add" onclick="event.stopPropagation();wsAddNode(\''+o.parent+'\')" title="Add sibling feature">+</div>';}
+else if(o.parent){h+='<div class="ng-add" onclick="event.stopPropagation();wsAddSubFeature(\''+o.id+'\')" title="Add sub-feature">+</div>';}
 return h;
 }
 
@@ -794,6 +797,34 @@ window.wsAddNode=function(parentId){
   newNode.x=zones[parentId]?zones[parentId].x+(zones[parentId].w-(catCh[parentId].length*NW+(catCh[parentId].length-1)*NG))/2+newIdx*(NW+NG):parent.x;
   renderNode(newNode);recomputeLayout();
   sp(newNode);autoSave();
+};
+
+/* ---- Add sub-feature (child of a feature) ---- */
+window.wsAddSubFeature=function(parentId){
+  pushUndo();
+  const parent=allN.find(n=>n.id===parentId);if(!parent) return;
+  const newId='f-sub-'+Date.now();
+  const newNode={id:newId,parent:parentId,idx:0,evs:false,conf:'low',
+    label:'If successful, what should now be true for users?',
+    sub:'Now they can ______ (solution-agnostic)',
+    need:'What\'s currently wrong? What is the undesirable reality that we believe should change?',needSev:1,
+    detail:{notes:'New sub-feature — what specific sub-problem must be solved within the parent feature?'}};
+  newNode.w=NW;
+  F.push(newNode);allN.push(newNode);
+  edges.push([newId,parentId]);evsMap[newId]=false;
+  const allSubs=F.filter(f=>f.parent===parentId);
+  const n=allSubs.length;const tw=n*NW+(n-1)*NG;
+  const pCx=parent.x+(parent.w||NW)/2;const sx=pCx-tw/2;
+  const subY=(parent.y||RY[2])+420;
+  allSubs.forEach((sf,i)=>{
+    sf.x=sx+i*(NW+NG);sf.y=subY;sf.idx=i;
+    if(nodeEls[sf.id]){nodeEls[sf.id].el.style.left=sf.x+'px';nodeEls[sf.id].el.style.top=sf.y+'px';}
+  });
+  renderNode(newNode);
+  const newBot=subY+400;const curH=parseInt(cv.style.height)||0;
+  if(newBot>curH){cv.style.height=(newBot+200)+'px';svg.setAttribute('height',newBot+200);}
+  bbB=Math.max(bbB,newBot);mapH=bbB-bbT;
+  drawE();sp(newNode);autoSave();
 };
 
 /* ---- Remove node ---- */

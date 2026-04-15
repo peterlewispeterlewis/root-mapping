@@ -474,5 +474,3 @@ Search the available project files or skill directory for example Root Maps. Key
 ### Source materials
 - Peter Lewis, "Nobody cares about your product." — original framework article (https://medium.com/@thispeterlewis/value-mapping-6203c997c463)
 - Peter Lewis, "Responsibility Without Territory" — companion article on outcome-oriented role definition, foundational for Personal & Role Maps (https://medium.com/capitalonedesign/responsibility-without-territory-65501c807f80)
-- `references/practical-guidance.md` — Waze example and facilitation tips
-- `references/quick-reference.md` — One-page summary
