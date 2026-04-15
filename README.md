@@ -26,31 +26,24 @@ Claude generates an **interactive HTML Root Map** — a zoomable, clickable, edi
 - **Competitive landscape** — how each outcome stacks up against alternatives
 - **Detail panels** — click any node for reasoning, sources, team beliefs, competitor tables, and editable notes
 
-### Interactive Maps
+### Built for Working Sessions
 
-Every generated Root Map includes:
-- **Clickable nodes** — click any node to open a detail panel with confidence rationale, competitive landscape, team beliefs, sources, and editable notes
-- **Add/remove** — add business outcomes, solutions, and child nodes directly from the detail panel
-- **Star (★) differentiators** — mark where you distinctively win, separate from EVS (must-have)
-- **Outcome & business indicators** — proposed metrics for how you'd measure each outcome
-- **Keyboard & accessibility** — Tab through nodes, Enter to open, Escape to close; respects reduced motion preferences
-- **Dark mode** — automatic via `prefers-color-scheme`
-- **Zoom & pan** — scroll to zoom, drag to pan, fit-to-viewport on load
+Every generated Root Map is a living, editable artifact. Open it in any browser and start facilitating — no specialized knowledge required.
 
-### Workshop Template (Advanced)
-
-For live facilitation sessions, an advanced workshop template (`root-map-template-workshop.html`) adds:
-- **Inline editing** — edit outcomes, needs, business outcomes, and solutions directly in the detail panel
+- **Inline editing** — click any node to edit outcomes, needs, business outcomes, and solutions in the detail panel
 - **Clickable indicators** — change confidence, need strength, and effectiveness by clicking dots
 - **EVS toggle** — flip EVS on/off with automatic parent cascade
+- **Star (★) differentiators** — mark where you distinctively win, separate from EVS (must-have)
+- **Outcome & business indicators** — proposed metrics for how you'd measure each outcome
+- **Add/remove nodes** — hover any node for a + button; add branches, features, or sub-features
 - **Drag to reposition** — rearrange nodes on the canvas
 - **Undo/redo** — full history with ⌘Z / ⌘⇧Z
 - **Auto-save** — edits persist in browser storage; restore prompt on reload
-- **Save snapshot** — download a self-contained HTML file with all edits baked in
+- **Save snapshot** — download a self-contained HTML file with all edits baked in and a changelog comment
 - **Change log** — tracks every edit with before/after and timestamps
-- **Animated connectors** — subtle flow pulses on connector lines
-
-The map is a living conversation artifact. Generate it with Claude, then open it in a browser and facilitate directly — no specialized knowledge required.
+- **Animated connectors** — subtle flow pulses on connector lines showing outcome relationships
+- **Dark mode** — automatic via `prefers-color-scheme`
+- **Keyboard & accessibility** — Tab through nodes, Enter to open, Escape to close; respects reduced motion preferences
 
 ## Quick Start
 
