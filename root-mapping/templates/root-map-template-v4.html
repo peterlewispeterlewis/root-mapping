@@ -89,8 +89,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Root Map — PRODUCT_NAME</title>
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <style>
 /* ============================================================
    ROOT MAP VISUAL SPEC v2.0 — DO NOT MODIFY
@@ -123,7 +121,7 @@
 .exp-badge{font-size:6px;font-weight:700;padding:2px 4px;border-radius:3px;background:var(--e400);color:#fff;margin-left:3px;letter-spacing:.04em;vertical-align:2px}
 .lev-badge{font-size:7px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:3px;text-transform:uppercase;letter-spacing:.03em}.lev-hi{background:#E1F5EE;color:#0A5C43}.lev-mi{background:#FFF3DB;color:#6B4E00}
 @media(prefers-color-scheme:dark){.lev-hi{background:#0A3B30;color:#72D4AB}.lev-mi{background:#3D2800;color:#D4940E}}
-.dtag{font-size:9px;font-weight:600;padding:3px 6px;border-radius:3px;display:inline-flex;align-items:center;gap:3px;margin-top:3px;text-transform:uppercase;letter-spacing:.03em}.dtag i{font-size:8px}.dd{background:#E1F5EE;color:#0A5C43;border:1px solid #B8E6D4}.dts{background:var(--g50);color:var(--tm);border:1px solid var(--bd)}.dbg{background:#FFF3DB;color:#6B4E00;border:1px solid #EDD9A3}.du{background:#EDE9FE;color:#4E3D9E;border:1px solid #D0C9F4}.dbh{background:#FEE9E9;color:#7A1D1D;border:1px solid #F0C4C4}
+.dtag{font-size:9px;font-weight:600;padding:3px 6px;border-radius:3px;display:inline-flex;align-items:center;gap:3px;margin-top:3px;text-transform:uppercase;letter-spacing:.03em}.dd{background:#E1F5EE;color:#0A5C43;border:1px solid #B8E6D4}.dts{background:var(--g50);color:var(--tm);border:1px solid var(--bd)}.dbg{background:#FFF3DB;color:#6B4E00;border:1px solid #EDD9A3}.du{background:#EDE9FE;color:#4E3D9E;border:1px solid #D0C9F4}.dbh{background:#FEE9E9;color:#7A1D1D;border:1px solid #F0C4C4}
 @media(prefers-color-scheme:dark){.dd{background:#0A3B30;color:#72D4AB;border-color:#1A5C48}.dts{background:var(--g50);color:var(--tm);border-color:var(--bd)}.dbg{background:#3D2800;color:#D4940E;border-color:#5A3D00}.du{background:#2A2060;color:#B3A4ED;border-color:#3D3080}.dbh{background:#401515;color:#F09595;border-color:#5C2020}.evs{background:var(--b400)}.exp-badge{background:var(--e400)}}
 .ind-dots{position:absolute;top:8px;right:8px;display:flex;gap:3px;align-items:center}.ind-dots .d{width:5px;height:5px;border-radius:50%}
 .c-out .ind-dots .d{background:var(--b400)}.c-out.non-evs .ind-dots .d{background:var(--b200)}.c-out.is-exp .ind-dots .d{background:var(--e400)}
@@ -213,11 +211,12 @@ svg.arrows{position:absolute;top:0;left:0;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.ng{transition:none}.ng:hover{transform:none}#dp{transition:none}#ws-log{transition:none}.flow-pulse{animation:none}}
 @media(max-width:900px){#dp{width:320px;right:-340px}#ws-log{width:300px;left:-320px}}
 @media(max-width:600px){#dp{width:100%;right:-100%}#dp.open{right:0}.dp-i{padding:24px 16px 40px}#ws-log{width:100%;left:-100%}#ws-log.open{left:0}}
+@media print{#bar,#dp,#ws-log,#ws-restore,#ws-modal-bg,.ng-add{display:none!important}#cc{position:static;overflow:visible;top:0}#cv{position:static;transform:none!important}body{overflow:visible;height:auto}.ng{box-shadow:none!important}.ng:hover{transform:none}svg.arrows{position:static}}
 </style>
 </head>
 <body class="ws-active">
 <!-- TOOLBAR -->
-<div id="bar"><div><h1>PRODUCT_NAME — Root Map</h1><div class="sub">Inferred product decision logic</div></div><div class="sep"></div><div class="leg"><div class="li"><svg width="9" height="9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="var(--r200)" stroke-width="1"/></svg>Need</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--b50)" stroke="var(--b400)" stroke-width="1.5"/></svg>Outcome</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--a50)" stroke="var(--a200)" stroke-width="1"/></svg>Business</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--t50)" stroke="var(--t200)" stroke-width="1"/></svg>Solution</div><div class="sep" style="height:14px"></div><div class="li">★ Key differentiator</div></div><div class="zc"><div class="ws-tools"><button class="ws-btn ws-btn-icon" onclick="wsUndo()" id="ws-undo-btn" style="opacity:.35;pointer-events:none" title="Undo (⌘Z)"><i class="ph-bold ph-arrow-counter-clockwise"></i></button><button class="ws-btn ws-btn-icon" onclick="wsRedo()" id="ws-redo-btn" style="opacity:.35;pointer-events:none" title="Redo (⌘⇧Z)"><i class="ph-bold ph-arrow-clockwise"></i></button><div class="sep" style="height:16px"></div><button class="ws-btn" onclick="wsShowLog()" id="ws-log-btn">Changes<span class="ws-badge" id="ws-badge">0</span></button><button class="ws-btn" onclick="wsSaveSnapshot()">Save snapshot</button><span class="ws-save-ind" id="ws-save-ind"></span></div><div class="sep" style="height:20px"></div><button onclick="zi()" aria-label="Zoom in">+</button><button onclick="zo()" aria-label="Zoom out">−</button><button onclick="rv()" aria-label="Reset view" title="Fit to screen"><i class="ph-bold ph-corners-out" style="font-size:13px"></i></button></div></div>
+<div id="bar"><div><h1>PRODUCT_NAME — Root Map</h1><div class="sub">Inferred product decision logic</div></div><div class="sep"></div><div class="leg"><div class="li"><svg width="9" height="9"><circle cx="4.5" cy="4.5" r="3.5" fill="none" stroke="var(--r200)" stroke-width="1"/></svg>Need</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--b50)" stroke="var(--b400)" stroke-width="1.5"/></svg>Outcome</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--a50)" stroke="var(--a200)" stroke-width="1"/></svg>Business</div><div class="li"><svg width="9" height="9"><rect x=".5" y=".5" width="8" height="8" rx="2" fill="var(--t50)" stroke="var(--t200)" stroke-width="1"/></svg>Solution</div><div class="sep" style="height:14px"></div><div class="li">★ Key differentiator</div></div><div class="zc"><div class="ws-tools"><button class="ws-btn ws-btn-icon" onclick="wsUndo()" id="ws-undo-btn" style="opacity:.35;pointer-events:none" title="Undo (⌘Z)" aria-label="Undo">↩</button><button class="ws-btn ws-btn-icon" onclick="wsRedo()" id="ws-redo-btn" style="opacity:.35;pointer-events:none" title="Redo (⌘⇧Z)" aria-label="Redo">↪</button><div class="sep" style="height:16px"></div><button class="ws-btn" onclick="wsShowLog()" id="ws-log-btn">Changes<span class="ws-badge" id="ws-badge">0</span></button><button class="ws-btn" onclick="wsSaveSnapshot()">Save snapshot</button><button class="ws-btn" onclick="wsCopyData()" id="ws-copy-btn">Copy map data</button><span class="ws-save-ind" id="ws-save-ind"></span></div><div class="sep" style="height:20px"></div><button onclick="zi()" aria-label="Zoom in">+</button><button onclick="zo()" aria-label="Zoom out">−</button><button onclick="rv()" aria-label="Reset view" title="Fit to screen">⊞</button></div></div>
 <div id="ws-restore"><span>Edit session found — restore previous edits?</span><button class="ws-r-yes" onclick="wsRestore()">Restore</button><button class="ws-r-no" onclick="wsDismiss()">Start fresh</button></div>
 <div id="ws-log"><div class="wl-head"><h2>Change Log</h2><button class="xb" onclick="wsHideLog()" style="position:static;float:none;margin:0" aria-label="Close change log">✕</button></div><div class="wl-notes"><label>Session notes</label><textarea id="ws-session-notes" placeholder="What was discussed, who was present, key decisions..."></textarea></div><div id="ws-log-entries"><div class="wl-empty">No changes yet</div></div></div>
 <div id="ws-modal-bg"><div id="ws-modal"><h3>Save snapshot</h3><div class="ws-m-sub">This downloads a self-contained HTML file with all your edits baked in.</div><textarea id="ws-changelog" placeholder="What did you change and why? (e.g., &quot;Reframed noise control outcome based on team discussion — shifted from feature-led to benefit-led language&quot;)"></textarea><div class="ws-m-btns"><button class="ws-m-cancel" onclick="wsCloseModal()">Cancel</button><button class="ws-m-save" onclick="wsConfirmSave()">Save &amp; download</button></div></div></div>
@@ -234,7 +233,7 @@ const NW=230,NG=35,RY=[50,620,1040];
 const CC={high:'var(--hi)',medium:'var(--mi)',low:'var(--lo)'};
 const LC={high:'var(--hi)',medium:'var(--mi)'};
 const dC={diff:'dd',ts:'dts',bg:'dbg',unc:'du',beh:'dbh'};
-const dL={diff:'<i class="ph-fill ph-star"></i> differentiated',ts:'<i class="ph-fill ph-check-circle"></i> table stakes',bg:'<i class="ph-fill ph-crosshair-simple"></i> battleground',unc:'<i class="ph-fill ph-medal"></i> uncontested',beh:'<i class="ph-fill ph-trend-down"></i> behind'};
+const dL={diff:'★ differentiated',ts:'✓ table stakes',bg:'⊕ battleground',unc:'◆ uncontested',beh:'↓ behind'};
 
 /* ============================================================
    ===DATA=== REPLACE EVERYTHING BELOW THIS LINE PER PRODUCT
@@ -847,6 +846,8 @@ window.wsAddSubFeature=function(parentId){
     detail:{notes:'New sub-feature — what specific sub-problem must be solved within the parent feature?'}};
   newNode.w=NW;
   F.push(newNode);allN.push(newNode);
+  if(!subCh[parentId])subCh[parentId]=[];
+  if(!subCh[parentId].includes(newId))subCh[parentId].push(newId);
   edges.push([newId,parentId]);evsMap[newId]=false;
   const allSubs=F.filter(f=>f.parent===parentId);
   const n=allSubs.length;const tw=n*NW+(n-1)*NG;
@@ -895,6 +896,9 @@ window.wsRemoveNode=function(nid){
       for(let j=edges.length-1;j>=0;j--){if(edges[j][0]===sk.id||edges[j][1]===sk.id)edges.splice(j,1);}
       delete evsMap[sk.id];
     });
+    delete subCh[nid];
+    // Clean this node from its parent's subCh if it's a sub-feature itself
+    if(subCh[node.parent]){const si=subCh[node.parent].indexOf(nid);if(si>=0)subCh[node.parent].splice(si,1);}
     const fi=F.indexOf(node);if(fi>=0)F.splice(fi,1);
     if(catCh[node.parent]){const idx=catCh[node.parent].indexOf(nid);if(idx>=0)catCh[node.parent].splice(idx,1);}
   }
@@ -957,14 +961,35 @@ window.wsRestore=function(){
 };
 window.wsDismiss=function(){try{localStorage.removeItem(WS_KEY);}catch(e){}document.getElementById('ws-restore').style.display='none';};
 
+/* ---- Clean node helper ---- */
+const cleanProps=['id','parent','idx','root','evs','star','isExp','leverage','diff','conf','label','sub','need','needSev','biz','bizIndicators','sol','indicators','detail'];
+function cleanNode(n){const c={};cleanProps.forEach(p=>{if(n[p]!==undefined&&n[p]!==null)c[p]=n[p];});return c;}
+
+/* ---- Copy map data for AI ---- */
+window.wsCopyData=function(){
+  const oData=allN.filter(n=>!n.parent).map(cleanNode);const fData=allN.filter(n=>n.parent).map(cleanNode);
+  let out='// Root Map data — paste this as context for Claude, Cursor, Codex, etc.\n';
+  out+='// Product: '+prodName+'\n\n';
+  out+='catCh = '+JSON.stringify(catCh,null,2)+';\n\n';
+  out+='catOrd = '+JSON.stringify(catOrd)+';\n\n';
+  out+='O = '+JSON.stringify(oData,null,2).replace(/"([a-zA-Z_]\w*)":/g,'$1:')+';\n\n';
+  out+='F = '+JSON.stringify(fData,null,2).replace(/"([a-zA-Z_]\w*)":/g,'$1:')+';\n';
+  navigator.clipboard.writeText(out).then(()=>{
+    document.getElementById('ws-save-ind').textContent='Map data copied ✓';
+    setTimeout(()=>{document.getElementById('ws-save-ind').textContent='';},2500);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=out;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    document.getElementById('ws-save-ind').textContent='Map data copied ✓';
+    setTimeout(()=>{document.getElementById('ws-save-ind').textContent='';},2500);
+  });
+};
+
 /* ---- Save Snapshot ---- */
 window.wsSaveSnapshot=function(){document.getElementById('ws-modal-bg').classList.add('open');document.getElementById('ws-changelog').focus();};
 window.wsCloseModal=function(){document.getElementById('ws-modal-bg').classList.remove('open');};
 window.wsConfirmSave=function(){
   const changeNote=document.getElementById('ws-changelog').value.trim();
   document.getElementById('ws-modal-bg').classList.remove('open');
-  const cleanProps=['id','parent','idx','root','evs','star','isExp','leverage','diff','conf','label','sub','need','needSev','biz','bizIndicators','sol','indicators','detail'];
-  function cleanNode(n){const c={};cleanProps.forEach(p=>{if(n[p]!==undefined&&n[p]!==null)c[p]=n[p];});return c;}
   const oData=allN.filter(n=>!n.parent).map(cleanNode);const fData=allN.filter(n=>n.parent).map(cleanNode);
   let dataStr='const catCh = '+JSON.stringify(catCh,null,2)+';\nconst catOrd = '+JSON.stringify(catOrd)+';\n';
   dataStr+='const O = '+JSON.stringify(oData,null,2).replace(/"([a-zA-Z_]\w*)":/g,'$1:')+';\n';

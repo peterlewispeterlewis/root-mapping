@@ -215,7 +215,13 @@ The conversation with Claude IS the iteration engine. The user reviews the map a
 
 Claude regenerates the HTML incorporating these changes. Each version is a snapshot of the team's evolving beliefs.
 
-**The detail panel includes an editable notes field** where the user can add context, links, evidence, or questions during review. These notes persist for the session and can be fed back into the conversation for the next iteration.
+**Two ways to iterate — both work together:**
+
+1. **Edit directly in the browser.** Every generated map includes inline editing — click any node to edit outcomes, needs, business outcomes, and solutions in the detail panel. Change confidence, severity, and effectiveness by clicking indicator dots. Toggle EVS, drag nodes, add/remove branches. All edits are tracked in a change log with undo/redo (⌘Z). When done, click **Save snapshot** to download a self-contained HTML with all edits baked in.
+
+2. **Bring changes back to the AI.** Describe what you want changed in conversation and let Claude/Cursor/Codex regenerate. For precision, click **Copy map data** in the toolbar to copy the current data section — paste it as context so the AI has the exact current state, not a stale version.
+
+Either approach works. Light edits (reword an outcome, adjust confidence, add a business outcome) are faster in the browser. Structural changes (reorganize branches, add research-backed nodes, rethink the hierarchy) are better via AI conversation.
 
 ### Step 5: Offer Expansion Opportunities (Optional — Ask First)
 
